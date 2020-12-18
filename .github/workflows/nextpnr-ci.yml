@@ -24,7 +24,8 @@ jobs:
           #$Env:BOOST_ROOT = $Env:BOOST_ROOT_1_72_0
           #dir $Env:BOOST_ROOT\lib
           #dir $Env:BOOST_ROOT\libs
-          #dir $Env:BOOST_ROOT\include
+          dir $Env:BOOST_ROOT\include
+          dir $Env:BOOST_ROOT\include\version
           #dir $Env:BOOST_ROOT\boost
           dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild"
           dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\VS\lib\x64"
@@ -34,11 +35,12 @@ jobs:
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
           echo $VS_Root
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include -Destination "$VS_Root\include"
+          dir "$VS_Root\include"
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib -Destination "$VS_Rootlib\x64"
           [Environment]::SetEnvironmentVariable("BOOST_INCLUDEDIR", "$VS_Root\include", [System.EnvironmentVariableTarget]::Machine)
-          [Environment]::SetEnvironmentVariable("Boost_LIBRARY_DIR", "$VS_Root\lib\x64", [System.EnvironmentVariableTarget]::Machine)
-          $env:BOOST_INCLUDEDIR = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
-          $env:BOOST_LIBRARYDIR = [System.Environment]::GetEnvironmentVariable("BOOST_LIBRARYDIR", "Machine")
+          [Environment]::SetEnvironmentVariable("Boost_LIBRARYDIR", "$VS_Root\lib\x64", [System.EnvironmentVariableTarget]::Machine)
+          $Env:BOOST_INCLUDEDIR = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
+          $Env:BOOST_LIBRARYDIR = [System.Environment]::GetEnvironmentVariable("BOOST_LIBRARYDIR", "Machine")
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
@@ -49,8 +51,8 @@ jobs:
       - name: Testing
         working-directory: prjtrellis\libtrellis\
         run: |
-          echo $env:BOOST_INCLUDEDIR
-          echo $env:BOOST_LIBRARYDIR
+          echo $Env:BOOST_INCLUDEDIR
+          echo $Env:BOOST_LIBRARYDIR
 
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' -DBoost_INCLUDE_DIR="$VS_Root\include" .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
