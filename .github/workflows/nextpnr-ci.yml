@@ -37,10 +37,6 @@ jobs:
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib -Destination "$VS_Rootlib\x64"
           [Environment]::SetEnvironmentVariable("Boost_INCLUDE_DIR", "$VS_Root\include", [System.EnvironmentVariableTarget]::Machine)
           [Environment]::SetEnvironmentVariable("Boost_LIBRARY_DIR", "$VS_Root\lib\x64", [System.EnvironmentVariableTarget]::Machine)
-          $env:Boost_INCLUDE_DIR = [System.Environment]::GetEnvironmentVariable("Boost_INCLUDE_DIR", "Machine")
-          $env:Boost_LIBRARY_DIR = [System.Environment]::GetEnvironmentVariable("Boost_LIBRARY_DIR", "Machine")
-
-
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
@@ -51,8 +47,8 @@ jobs:
       - name: Testing
         working-directory: prjtrellis\libtrellis\
         run: |
-          echo $env:Boost_INCLUDE_DIR
-          echo $env:Boost_LIBRARY_DIR
+          $env:Boost_INCLUDE_DIR = [System.Environment]::GetEnvironmentVariable("Boost_INCLUDE_DIR", "Machine")
+          $env:Boost_LIBRARY_DIR = [System.Environment]::GetEnvironmentVariable("Boost_LIBRARY_DIR", "Machine")
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
           
