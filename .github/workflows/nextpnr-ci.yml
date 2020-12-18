@@ -51,8 +51,8 @@ jobs:
         working-directory: prjtrellis\libtrellis\
         run: |
           # TODO try without these
-          $Env:BOOST_INCLUDEDIR = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
-          $Env:BOOST_LIBRARYDIR = [System.Environment]::GetEnvironmentVariable("BOOST_LIBRARYDIR", "Machine")
+          #$Env:BOOST_INCLUDEDIR = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
+          #$Env:BOOST_LIBRARYDIR = [System.Environment]::GetEnvironmentVariable("BOOST_LIBRARYDIR", "Machine")
 
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
