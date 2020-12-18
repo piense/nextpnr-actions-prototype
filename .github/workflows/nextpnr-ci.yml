@@ -38,14 +38,11 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: YosysHQ/prjtrellis
+          path: prjtrellis
 
       - name: Testing
-        #working-directory: .\prjtrellis\libtrellis\
+        #working-directory: prjtrellis\libtrellis\
         run: |
-          dir .
-          cd $Env:GITHUB_WORKSPACE
-          dir .
-          cd prjtrellis\libtrellis
           dir .
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
