@@ -15,22 +15,22 @@ jobs:
     steps:
       # Checks out a copy of your repository on the ubuntu-latest machine
       - name: Checkout nextpnr
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
           repository: YosysHQ/nextpnr.git
           submodules: recursive
         
       - name: Checkout prjtrellis
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
           repository: YosysHQ/prjtrellis.git
       
       - name: Checkout yosys
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
           repository: YosysHQ/yosys.git
       
       - name: Checkout icestorm
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
           repository: YosysHQ/icestorm.git
