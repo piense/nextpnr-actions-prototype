@@ -29,10 +29,10 @@ jobs:
           dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild"
           dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\VS\lib\x64"
 
-      - name: Add Boost to VS
-        run: |
-          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include -Destination "C:\Program Files (x86)\Microsoft Visual Studio\Enterprice\VC\Auxiliary\VS\include"
-          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib -Destination "C:\Program Files (x86)\Microsoft Visual Studio\Enterprice\VC\Auxiliary\VS\lib\x64"
+      #- name: Add Boost to VS
+        #run: |
+          #Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include -Destination "C:\Program Files (x86)\Microsoft Visual Studio\Enterprice\VC\Auxiliary\VS\include"
+          #Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib -Destination "C:\Program Files (x86)\Microsoft Visual Studio\Enterprice\VC\Auxiliary\VS\lib\x64"
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
