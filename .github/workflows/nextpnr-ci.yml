@@ -17,20 +17,20 @@ jobs:
       - name: Checkout nextpnr
         uses: actions/checkout@v2
         with:
-          repository: https://github.com/YosysHQ/nextpnr.git
+          repository: YosysHQ/nextpnr
           submodules: recursive
         
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
         with:
-          repository: https://github.com/YosysHQ/prjtrellis.git
+          repository: YosysHQ/prjtrellis
       
       - name: Checkout yosys
         uses: actions/checkout@v2
         with:
-          repository: https://github.com/YosysHQ/yosys.git
+          repository: YosysHQ/yosys
       
       - name: Checkout icestorm
         uses: actions/checkout@v2
         with:
-          repository: https://github.com/YosysHQ/icestorm.git
+          repository: YosysHQ/icestorm
