@@ -45,6 +45,7 @@ jobs:
 
           
       - name: MSYS2 Testing
+        shell: msys2 {0}
         working-directory: yosys
         run: |
           pip install xdot
