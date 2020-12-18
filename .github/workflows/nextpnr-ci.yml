@@ -29,10 +29,20 @@ jobs:
           dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild"
           dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\VS\lib\x64"
 
-      #- name: Add Boost to VS
-        #run: |
-          #Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include -Destination "C:\Program Files (x86)\Microsoft Visual Studio\Enterprice\VC\Auxiliary\VS\include"
-          #Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib -Destination "C:\Program Files (x86)\Microsoft Visual Studio\Enterprice\VC\Auxiliary\VS\lib\x64"
+      - name: Add Boost to VS
+        run: |
+          $VS_Root = "C:\Program Files (x86)\Microsoft Visual Studio\Enterprice\VC\Auxiliary\VS"
+          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include -Destination "$VS_Root\include"
+          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib -Destination "$VS_Rootlib\x64"
+          [Environment]::SetEnvironmentVariable("Boost_INCLUDEDIR", "$VS_Root\include", [System.EnvironmentVariableTarget]::Machine)
+          [Environment]::SetEnvironmentVariable("Boost_LIBRARYDIR", "$VS_Root\lib\x64", [System.EnvironmentVariableTarget]::Machine)
+          $env:Boost_INCLUDEDIR = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
+          $env:Boost_LIBRARYDIR = [System.Environment]::GetEnvironmentVariable("Boost_LIBRARYDIR", "Machine")
+
+          $oldpath = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH).path
+          $newpath = $oldpath + ";$Env:BOOST_ROOT_1_72_0\lib"
+          Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value $newPath
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
