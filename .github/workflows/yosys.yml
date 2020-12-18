@@ -34,7 +34,7 @@ jobs:
             msys/libffi-devel
             msys/pkg-config
             python
-            pacman -S python3
+            python3
             mingw64/mingw-w64-x86_64-libftdi
             mingw64/mingw-w64-x86_64-python3-pip
             mingw64/mingw-w64-x86_64-python2-pip
