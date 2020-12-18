@@ -40,7 +40,7 @@ jobs:
           repository: YosysHQ/prjtrellis
 
       - name: Testing
-        working-directory: prjtrellis\libtrellis\
+        working-directory: .\prjtrellis\libtrellis\
         run: |
           dir .
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
