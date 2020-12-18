@@ -2,7 +2,7 @@ name: yosys
 
 on:
   push:
-    paths: 'yosys.yml'
+    paths: '.github/workflows/yosys.yml'
 
 jobs:
   next-pnr:
