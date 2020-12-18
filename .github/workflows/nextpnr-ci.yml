@@ -16,12 +16,12 @@ jobs:
       - name: Testing
         run: |
           echo $Env:BOOST_ROOT_1_72_0
-          $Env:BOOST_ROOT = $Env:BOOST_ROOT_1_72_0
-          dir $Env:BOOST_ROOT\lib
-          dir $Env:BOOST_ROOT\libs
-          dir $Env:BOOST_ROOT\include
-          dir $Env:BOOST_ROOT\boost
-          dir "C:\Program Files (x86)\Microsoft Visual Studio\2019"
+          #$Env:BOOST_ROOT = $Env:BOOST_ROOT_1_72_0
+          #dir $Env:BOOST_ROOT\lib
+          #dir $Env:BOOST_ROOT\libs
+          #dir $Env:BOOST_ROOT\include
+          #dir $Env:BOOST_ROOT\boost
+          dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise"
       
       # Checks out a copy of your repository on the ubuntu-latest machine
       #- name: Checkout nextpnr
