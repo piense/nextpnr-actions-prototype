@@ -47,8 +47,13 @@ jobs:
       - name: Testing
         working-directory: prjtrellis\libtrellis\
         run: |
+          $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
           $env:Boost_INCLUDE_DIR = [System.Environment]::GetEnvironmentVariable("Boost_INCLUDE_DIR", "Machine")
           $env:Boost_LIBRARY_DIR = [System.Environment]::GetEnvironmentVariable("Boost_LIBRARY_DIR", "Machine")
+          echo $env:Boost_INCLUDE_DIR
+          echo $env:Boost_LIBRARY_DIR
+          $env:Boost_INCLUDE_DIR = "$VS_Root\include"
+          $env:Boost_LIBRARY_DIR = "$VS_Root\lib\x64"
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
           
