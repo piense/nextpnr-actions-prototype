@@ -1,15 +1,11 @@
 name: nextpnr-ci
 
-# Run this workflow every time a new commit pushed to your repository
-on: push
-
+on:
+  push:
+    paths: 'nextpnr.yml'
 jobs:
-  # Set the job key. The key is displayed as the job name
-  # when a job name is not provided
   next-pnr:
-    # Name the Job
     name: Build nextpnr
-    # Set the type of machine to run on
     runs-on: windows-2019
 
     steps:
