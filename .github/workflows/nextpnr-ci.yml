@@ -41,9 +41,8 @@ jobs:
           path: prjtrellis
 
       - name: Testing
-        #working-directory: prjtrellis\libtrellis\
+        working-directory: prjtrellis\libtrellis\
         run: |
-          dir .
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
           
