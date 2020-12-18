@@ -40,6 +40,7 @@ jobs:
           [Environment]::SetEnvironmentVariable("Boost_LIBRARYDIR", "$VS_Root\lib\x64", [System.EnvironmentVariableTarget]::Machine)
           $Env:BOOST_INCLUDEDIR = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
           $Env:BOOST_LIBRARYDIR = [System.Environment]::GetEnvironmentVariable("BOOST_LIBRARYDIR", "Machine")
+          dir "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/VS/lib/x64"
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
