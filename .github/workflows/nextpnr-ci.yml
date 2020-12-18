@@ -26,10 +26,27 @@ jobs:
           #dir $Env:BOOST_ROOT\libs
           #dir $Env:BOOST_ROOT\include
           #dir $Env:BOOST_ROOT\boost
+          dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild"
           dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\VS\lib\x64"
+
+
+      - name: Checkout prjtrellis
+        uses: actions/checkout@v2
+        with:
+          repository: YosysHQ/prjtrellis
+
+      - name: Testing
+        working-directory: prjtrellis
+        run: |
+          cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
+          msbuild /t:Build /p:Configuration=Release libtrellis.sln
           
-      
-      # Checks out a copy of your repository on the ubuntu-latest machine
+      #- name: Checkout nextpnr
+      #  uses: actions/checkout@v2
+      #  with:
+      #    repository: YosysHQ/nextpnr
+      #    submodules: recursive
+
       #- name: Checkout nextpnr
 #        uses: actions/checkout@v2
  #       with:
