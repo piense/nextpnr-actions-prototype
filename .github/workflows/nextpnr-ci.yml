@@ -21,11 +21,11 @@ jobs:
           #echo $Env:Path
           #msbuild /?
           #echo $Env:BOOST_ROOT_1_72_0
-          #$Env:BOOST_ROOT = $Env:BOOST_ROOT_1_72_0
+          $Env:BOOST_ROOT = $Env:BOOST_ROOT_1_72_0
           #dir $Env:BOOST_ROOT\lib
           #dir $Env:BOOST_ROOT\libs
           dir $Env:BOOST_ROOT\include
-          dir $Env:BOOST_ROOT\include\version
+          dir $Env:BOOST_ROOT\include\boost
           #dir $Env:BOOST_ROOT\boost
           dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild"
           dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\VS\lib\x64"
