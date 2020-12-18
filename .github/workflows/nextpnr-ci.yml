@@ -34,7 +34,7 @@ jobs:
         run: |
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include\boost -Destination "$VS_Root\include"
-          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Rootlib\lib\x64"
+          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Root\lib\x64"
           dir "$VS_Rootlib\lib\x64"
           [Environment]::SetEnvironmentVariable("BOOST_INCLUDEDIR", "$VS_Root\include", [System.EnvironmentVariableTarget]::Machine)
           [Environment]::SetEnvironmentVariable("Boost_LIBRARYDIR", "$VS_Root\lib\x64", [System.EnvironmentVariableTarget]::Machine)
