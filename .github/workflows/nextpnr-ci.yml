@@ -21,7 +21,7 @@ jobs:
           #dir $Env:BOOST_ROOT\libs
           #dir $Env:BOOST_ROOT\include
           #dir $Env:BOOST_ROOT\boost
-          dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise"
+          dir "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\VS\lib\"
       
       # Checks out a copy of your repository on the ubuntu-latest machine
       #- name: Checkout nextpnr
