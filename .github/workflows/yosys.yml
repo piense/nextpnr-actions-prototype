@@ -45,7 +45,12 @@ jobs:
 
           
       - name: MSYS2 Testing
+        working-directory: yosys
         run: |
-          echo "Heyo"
+          pip2 install xdot
+          pip3 install xdot
+          mingw32-make config-msys2-64
+          mingw32-make -j8
+          mingw32-make DESTDIR=$msysReleaseDir PREFIX='' install
           
         
