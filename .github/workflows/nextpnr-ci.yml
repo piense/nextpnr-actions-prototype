@@ -14,12 +14,23 @@ jobs:
 
     steps:
       # Checks out a copy of your repository on the ubuntu-latest machine
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Runs the Super-Linter action
-      - name: Run Super-Linter
-        uses: github/super-linter@v3
-        env:
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout nextpnr
+      - uses: actions/checkout@v2
+        with:
+          repository: YosysHQ/nextpnr.git
+          submodules: recursive
+        
+      - name: Checkout prjtrellis
+      - uses: actions/checkout@v2
+        with:
+          repository: YosysHQ/prjtrellis.git
+      
+      - name: Checkout yosys
+      - uses: actions/checkout@v2
+        with:
+          repository: YosysHQ/yosys.git
+      
+      - name: Checkout icestorm
+      - uses: actions/checkout@v2
+        with:
+          repository: YosysHQ/icestorm.git
