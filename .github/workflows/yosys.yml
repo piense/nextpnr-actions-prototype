@@ -1,4 +1,4 @@
-name: yosys
+name: Yosys
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   next-pnr:
-    name: Build yosys
+    name: Build Yosys
     runs-on: windows-2019
 
     steps:
