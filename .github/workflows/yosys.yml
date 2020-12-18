@@ -1,6 +1,8 @@
 name: yosys
 
-on: push
+on:
+  push:
+    paths: 'yosys.yml'
 
 jobs:
   next-pnr:
