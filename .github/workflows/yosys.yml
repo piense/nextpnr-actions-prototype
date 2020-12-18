@@ -35,11 +35,10 @@ jobs:
             msys/tcl
             msys/libffi-devel
             msys/pkg-config
-            python
+            git
             python3
             mingw64/mingw-w64-x86_64-libftdi
             mingw64/mingw-w64-x86_64-python3-pip
-            mingw64/mingw-w64-x86_64-python2-pip
             mingw64/mingw-w64-x86_64-dlfcn
             mingw-w64-x86_64-toolchain
 
@@ -48,7 +47,6 @@ jobs:
         shell: msys2 {0}
         working-directory: yosys
         run: |
-          pip install xdot
           pip3 install xdot
           mingw32-make config-msys2-64
           mingw32-make -j8
