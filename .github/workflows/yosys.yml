@@ -1,15 +1,10 @@
-name: nextpnr-ci
+name: yosys
 
-# Run this workflow every time a new commit pushed to your repository
 on: push
 
 jobs:
-  # Set the job key. The key is displayed as the job name
-  # when a job name is not provided
   next-pnr:
-    # Name the Job
-    name: Build nextpnr
-    # Set the type of machine to run on
+    name: Build yosys
     runs-on: windows-2019
 
     steps:
@@ -26,22 +21,29 @@ jobs:
           repository: YosysHQ/yosys
           path: yosys
           
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: |
+            msys/bison
+            msys/flex
+            msys/libreadline-devel
+            msys/gawk
+            msys/tcl
+            msys/libffi-devel
+            msys/pkg-config
+            python
+            pacman -S python3
+            mingw64/mingw-w64-x86_64-libftdi
+            mingw64/mingw-w64-x86_64-python3-pip
+            mingw64/mingw-w64-x86_64-python2-pip
+            mingw64/mingw-w64-x86_64-dlfcn
+            mingw-w64-x86_64-toolchain
 
-
-      #- name: Checkout nextpnr
-#        uses: actions/checkout@v2
- #       with:
-  #        repository: YosysHQ/nextpnr
-   #       submodules: recursive
+          
+      - name: MSYS2 Testing
+        run: |
+          echo "Heyo"
+          
         
-#      - name: Checkout prjtrellis
- #       uses: actions/checkout@v2
-  #      with:
-   #       repository: YosysHQ/prjtrellis
-      #
-
-      
-   #   - name: Checkout icestorm
-    #    uses: actions/checkout@v2
-     #   with:
-      #    repository: YosysHQ/icestorm
