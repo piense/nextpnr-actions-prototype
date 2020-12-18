@@ -10,20 +10,14 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - name: Setup msbuild
-        uses: microsoft/setup-msbuild@v1
-      
-      - name: Testing
-        run: |
-          dir "C:\msys64"
-
       - name: Checkout yosys
         uses: actions/checkout@v2
         with:
           repository: YosysHQ/yosys
           path: yosys
           
-      - uses: msys2/setup-msys2@v2
+      - name: Setup Msys2
+        uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
           update: true
@@ -42,14 +36,15 @@ jobs:
             mingw64/mingw-w64-x86_64-dlfcn
             mingw-w64-x86_64-toolchain
 
-          
-      - name: MSYS2 Testing
+      - name: Build Yosys
         shell: msys2 {0}
         working-directory: yosys
         run: |
+          mkdir buildProducts
           pip3 install xdot
           mingw32-make config-msys2-64
           mingw32-make -j8
-          mingw32-make DESTDIR=$msysReleaseDir PREFIX='' install
+          mingw32-make DESTDIR=buildProducts PREFIX='' install
+          dir buildProducts
           
         
