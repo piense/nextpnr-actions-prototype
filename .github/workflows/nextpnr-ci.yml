@@ -33,9 +33,7 @@ jobs:
       - name: Add Boost to VS
         run: |
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
-          echo $VS_Root
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include\boost -Destination "$VS_Root\include"
-          dir "$VS_Root\include"
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Rootlib\lib\x64"
           [Environment]::SetEnvironmentVariable("BOOST_INCLUDEDIR", "$VS_Root\include", [System.EnvironmentVariableTarget]::Machine)
           [Environment]::SetEnvironmentVariable("Boost_LIBRARYDIR", "$VS_Root\lib\x64", [System.EnvironmentVariableTarget]::Machine)
@@ -51,10 +49,12 @@ jobs:
       - name: Testing
         working-directory: prjtrellis\libtrellis\
         run: |
+          $Env:BOOST_INCLUDEDIR = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
+          $Env:BOOST_LIBRARYDIR = [System.Environment]::GetEnvironmentVariable("BOOST_LIBRARYDIR", "Machine")
           echo $Env:BOOST_INCLUDEDIR
           echo $Env:BOOST_LIBRARYDIR
 
-          cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' -DBoost_INCLUDE_DIR="$VS_Root\include" .
+          cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' -DBoost_DEBUG=ON .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
           
       #- name: Checkout nextpnr
