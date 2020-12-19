@@ -38,7 +38,7 @@ jobs:
       - name: Install prjtrellis
         run: |
           mkdir releaseDir
-          cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P cmake_install.cmake .\prjtrellis\libtrellis\
+          cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
           dir releaseDir
 
       - name: Checkout nextpnr
