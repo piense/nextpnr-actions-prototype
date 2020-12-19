@@ -46,7 +46,26 @@ jobs:
           mingw32-make DESTDIR=buildProducts PREFIX='' install
           
       - name: Build Yosys
-        shell: msys2 {0}
         working-directory: yosys
         run: |
+          $msys_root = "C:\msys64"
+          $releaseDir = "buildProducts"
+          dir "C:\msys64\mingw64\bin\"
+          
+          Copy-Item $msys_root\bin\tcl86.dll -Destination $releaseDir"\bin"
+          Copy-Item $msys_root\bin\libgcc_s_seh-1.dll -Destination $releaseDir"\bin"
+          Copy-Item $msys_root\bin\zlib1.dll -Destination $releaseDir"\bin"
+          Copy-Item $msys_root\bin\libreadline8.dll -Destination $releaseDir"\bin"
+          Copy-Item $msys_root\bin\libstdc++-6.dll -Destination $releaseDir"\bin"
+          Copy-Item $msys_root\bin\libwinpthread-1.dll -Destination $releaseDir"\bin"
+          Copy-Item $msys_root\bin\libtermcap-0.dll -Destination $releaseDir"\bin"
+          
           dir buildProducts
+          
+          Compress-Archive "$releaseDir\*" "OSS-FPGA.zip"
+          
+      - name: Upload Zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: FPGA-Zip
+          path: OSS-FPGA.zip
