@@ -47,7 +47,7 @@ jobs:
           mingw32-make -j4
           mingw32-make DESTDIR=buildProducts PREFIX='' install
           
-      - name: Build Yosys
+      - name: Package Yosys
         working-directory: yosys
         run: |
           $msys_root = "C:\msys64\mingw64\bin"
