@@ -40,6 +40,8 @@ jobs:
           mkdir releaseDir
           cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
           dir releaseDir
+          dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release
+          dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release\lib
 
       - name: Checkout nextpnr
         uses: actions/checkout@v2
@@ -53,7 +55,7 @@ jobs:
         run: |
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
-          cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="..\prjtrellis\libtrellis\Release"
+          cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
