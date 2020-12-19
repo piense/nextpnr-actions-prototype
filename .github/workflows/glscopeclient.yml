@@ -40,7 +40,7 @@ jobs:
           mkdir build
           cd build
           cmake -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX=$MSYSTEM_PREFIX -DENABLE_SHARED=ON ..
-          mingw32-make - j4
+          mingw32-make -j4
           mingw32-make install
 
       - name: Checkout scopehal-apps
