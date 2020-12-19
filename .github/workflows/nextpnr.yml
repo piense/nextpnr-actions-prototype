@@ -12,7 +12,7 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
       
-      - name: Testing
+      - name: Print Testing
         run: |
           #echo $Env:Path
           #msbuild /?
@@ -31,10 +31,8 @@ jobs:
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include\boost -Destination "$VS_Root\include"
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Root\lib\x64"
-          [Environment]::SetEnvironmentVariable("BOOST_INCLUDEDIR", "$VS_Root\include", [System.EnvironmentVariableTarget]::Machine)
-          [Environment]::SetEnvironmentVariable("Boost_LIBRARYDIR", "$VS_Root\lib\x64", [System.EnvironmentVariableTarget]::Machine)
-          $Env:BOOST_INCLUDEDIR = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
-          $Env:BOOST_LIBRARYDIR = [System.Environment]::GetEnvironmentVariable("BOOST_LIBRARYDIR", "Machine")
+          echo "BOOST_LIBRARYDIR=$VS_Root\lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "BOOST_INCLUDEDIR=$VS_Root\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
@@ -43,13 +41,11 @@ jobs:
           path: prjtrellis
           fetch-depth: 0
 
-      - name: Testing
+      - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-          # TODO try without these
-          #$Env:BOOST_INCLUDEDIR = [System.Environment]::GetEnvironmentVariable("BOOST_INCLUDEDIR", "Machine")
-          #$Env:BOOST_LIBRARYDIR = [System.Environment]::GetEnvironmentVariable("BOOST_LIBRARYDIR", "Machine")
-          refreshenv
+          echo $Env:BOOST_INCLUDEDIR
+          echo $Env:BOOST_LIBRARYDIR
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
           
