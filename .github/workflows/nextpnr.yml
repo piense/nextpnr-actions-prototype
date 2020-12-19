@@ -41,7 +41,6 @@ jobs:
           cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
           dir releaseDir
           dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release
-          dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release\lib
 
       - name: Checkout nextpnr
         uses: actions/checkout@v2
