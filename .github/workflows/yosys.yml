@@ -44,6 +44,9 @@ jobs:
           mingw32-make config-msys2-64
           mingw32-make -j4
           mingw32-make DESTDIR=buildProducts PREFIX='' install
-          dir buildProducts
           
-        
+      - name: Build Yosys
+        shell: msys2 {0}
+        working-directory: yosys
+        run: |
+          dir buildProducts
