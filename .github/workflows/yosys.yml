@@ -62,11 +62,9 @@ jobs:
           
           dir buildProducts
           
-          Compress-Archive "$releaseDir\*" "OSS-FPGA.zip"
-          
       - name: Upload Zip
         uses: actions/upload-artifact@v2
         with:
           if-no-files-found: error
           name: FPGA-Zip
-          path: yosys\OSS-FPGA.zip
+          path: yosys\buildProducts\*
