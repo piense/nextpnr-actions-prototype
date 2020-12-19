@@ -2,10 +2,11 @@ name: nextpnr-ci
 
 on:
   push:
-    paths: 'nextpnr.yml'
+    paths: '.github/workflows/nextpnr.yml'
+    
 jobs:
   next-pnr:
-    name: Build nextpnr
+    name: prjtrellis
     runs-on: windows-2019
 
     steps:
