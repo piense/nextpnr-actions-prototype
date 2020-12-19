@@ -74,6 +74,7 @@ jobs:
   test-yosys:
     name: Yosys Sanity Check
     runs-on: windows-2019
+    needs: build-yosys
     steps:
 
       - name: Checkout yosys
