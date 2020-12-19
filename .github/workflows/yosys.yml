@@ -68,5 +68,30 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           if-no-files-found: error
-          name: FPGA-Zip
+          name: yosys
           path: yosys\buildProducts\*
+
+  test-yosys:
+    name: Yosys Sanity Check
+    runs-on: windows-2019
+    steps:
+
+      - name: Checkout yosys
+        uses: actions/checkout@v2
+        with:
+          repository: YosysHQ/yosys
+          path: yosys-binaries
+
+      - name: Get Yosys Artifact
+        uses: actions/download-artifact@v2.0.7
+        with:
+          name: yosys
+          path: yosys
+
+      - name: Run Test
+        run: |
+         $Env:PATH = $Env:PATH += ";$Env:GITHUB_WORKSPACE\yosys-binaries\bin"
+         cd yosys\examples\basys3
+         yosys run_yosys.ys
+      
+    
