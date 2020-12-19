@@ -5,7 +5,7 @@ on:
     paths: '.github/workflows/yosys.yml'
 
 jobs:
-  next-pnr:
+  build-yosys:
     name: Build Yosys
     runs-on: windows-2019
 
@@ -67,5 +67,6 @@ jobs:
       - name: Upload Zip
         uses: actions/upload-artifact@v2
         with:
+          if-no-files-found: error
           name: FPGA-Zip
-          path: OSS-FPGA.zip
+          path: yosys\OSS-FPGA.zip
