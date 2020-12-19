@@ -32,14 +32,14 @@ jobs:
       - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-          #cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
-          #msbuild /t:Build /p:Configuration=Release libtrellis.sln
+          cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
+          msbuild /t:Build /p:Configuration=Release libtrellis.sln
           
       - name: Install prjtrellis
         run: |
-          #mkdir releaseDir
-          #cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P cmake_install.cmake .\prjtrellis\libtrellis\
-          #dir releaseDir
+          mkdir releaseDir
+          cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P cmake_install.cmake .\prjtrellis\libtrellis\
+          dir releaseDir
 
       - name: Checkout nextpnr
         uses: actions/checkout@v2
