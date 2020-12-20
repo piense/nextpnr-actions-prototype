@@ -49,6 +49,7 @@ jobs:
         with:
           repository: azonenberg/scopehal-apps
           path: scopehal-apps
+          submodules: recursive
           
       - name: Build scopehal-apps
         shell: msys2 {0}
