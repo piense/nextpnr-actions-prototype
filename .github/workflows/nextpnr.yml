@@ -27,6 +27,7 @@ jobs:
         with:
           repository: YosysHQ/prjtrellis
           path: prjtrellis
+          submodules: recursive
           fetch-depth: 0
 
       - name: Build prjtrellis
