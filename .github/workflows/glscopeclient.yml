@@ -62,7 +62,7 @@ jobs:
           mingw32-make -j4
 
       - name: Upload Artifacts
-        uses: actions/upload-artifacts@v2.2.1
+        uses: actions/upload-artifact@v2.2.1
         with:
           path: ./*
           name: glscopeclient
