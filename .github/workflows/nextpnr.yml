@@ -47,7 +47,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: YosysHQ/nextpnr
-          submodules: recursive
           path: nextpnr
 
       - name: Build nextpnr
