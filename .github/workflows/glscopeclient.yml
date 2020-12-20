@@ -55,7 +55,8 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -G "MinGW Makefiles" -DLIBFFTS_INCLUDE_DIR=/mingw64/include/ -DLIBFFTS_LIBRARIES=/mingw64/lib/libffts_static.a -DBUILD_TESTING=OFF ..
+          dir $MSYSTEM_PREFIX
+          cmake -G "MinGW Makefiles" -DLIBFFTS_INCLUDE_DIR=$MSYSTEM_PREFIX/mingw64/include /mingw64/include/ -DLIBFFTS_LIBRARIES=$MSYSTEM_PREFIX/mingw64/lib/libffts_static.a -DBUILD_TESTING=OFF ..
           mingw32-make -j4
 
        
