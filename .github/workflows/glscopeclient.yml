@@ -26,6 +26,7 @@ jobs:
             mingw-w64-x86_64-gtkmm3
             mingw-w64-x86_64-yaml-cpp
             mingw-w64-x86_64-glew
+            mingw-w64-opencl-headers
 
       - name: Checkout ffts
         uses: actions/checkout@v2
