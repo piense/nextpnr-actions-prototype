@@ -60,6 +60,12 @@ jobs:
           cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln -v:diag
       
+      - name: what went wrong
+        working-directory: nextpnr
+        if: ${{ failure() }}
+        run: |
+          bba\Release\bbasm.exe --le D:/a/nextpnr-actions-prototype/nextpnr-actions-prototype/nextpnr/ecp5/chipdb/chipdb-25k.bba ecp5/chipdb/chipdb-25k.bin
+      
       - name: Install nextpnr
         run: |
           cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P cmake_install.cmake .\nextpnr\
