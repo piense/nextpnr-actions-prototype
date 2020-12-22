@@ -18,8 +18,8 @@ jobs:
       - name: Add Boost to VS
         run: |
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
-          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include\boost -Destination "$VS_Root\include"
-          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Root\lib\x64"
+          #Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include\boost -Destination "$VS_Root\include"
+          #Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Root\lib\x64"
           echo "BOOST_LIBRARYDIR=$VS_Root\lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "BOOST_INCLUDEDIR=$VS_Root\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
