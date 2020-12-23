@@ -50,13 +50,13 @@ jobs:
           echo $Env:BOOST_LIBRARYDIR
           dir $Env:BOOST_INCLUDEDIR
           dir $Env:BOOST_LIBRARYDIR
-          cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
+          cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"'  -DBOOST_DEBUG=ON .
           .$Env:BUILD_TOOLS_DIR\msbuild.exe /t:Build /p:Configuration=Release libtrellis.sln
           
       - name: Install prjtrellis
         run: |
           mkdir releaseDir
-          cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake -DBOOST_DEBUG=ON
+          cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
           dir releaseDir
           dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release
 
