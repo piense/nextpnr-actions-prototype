@@ -12,17 +12,15 @@ jobs:
     #runs-on: self-hosted
 
     steps:
-      
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.1
-        with:
-          # Artifact name
-          name: include
-          # A file, directory or wildcard pattern that describes what to upload
-          path: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29333\include\
-      
-      - name: Setup msbuild
-        uses: microsoft/setup-msbuild@v1
+      # BuildTools seems a bit iffy version to version and the one currently on the GitHub runners is throwing weird errors
+      # so we'll lock it to a working version and update it occasionally.
+      # https://docs.microsoft.com/en-us/visualstudio/releases/2019/history
+      - name: Install BuildTools
+        run: |
+          $WebClient = New-Object System.Net.WebClient
+          $WebClient.DownloadFile("https://download.visualstudio.microsoft.com/download/pr/1206a800-42a6-4dd5-8b7d-27ccca92e823/cf739d701898f888a4c0b49722791e5ff450d40c6a986f69ecfb1e4da384e126/vs_BuildTools.exe",(Get-Location).tostring()+"\vs_BuildTools.exe")
+          $proc = Start-Process -FilePath vs_BuildTools.exe -ArgumentList "--passive", "--add", "Microsoft.VisualStudio.Workload.VCTools", "--includeRecommended", "--wait" -Wait -PassThru
+          echo "BUILD_TOOLS_DIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
   
       - name: Add Boost to VS
         run: |
@@ -44,7 +42,7 @@ jobs:
         working-directory: prjtrellis\libtrellis\
         run: |
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
-          msbuild /t:Build /p:Configuration=Release libtrellis.sln
+          $BUILD_TOOLS_DIR\msbuild /t:Build /p:Configuration=Release libtrellis.sln
           
       - name: Install prjtrellis
         run: |
@@ -67,7 +65,7 @@ jobs:
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
           cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
-          msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
+          $BUILD_TOOLS_DIR\msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
         run: |
