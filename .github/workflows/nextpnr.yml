@@ -8,8 +8,8 @@ on:
 jobs:
   next-pnr:
     name: prjtrellis
-    runs-on: windows-2019
-    timeout-minutes: 240
+    #runs-on: windows-2019
+    runs-on: self-hosted
 
     steps:
       - name: Setup msbuild
@@ -18,8 +18,8 @@ jobs:
       - name: Add Boost to VS
         run: |
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
-          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include\boost -Destination "$VS_Root\include"
-          Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Root\lib\x64"
+          #Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include\boost -Destination "$VS_Root\include"
+          #Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Root\lib\x64"
           echo "BOOST_LIBRARYDIR=$VS_Root\lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "BOOST_INCLUDEDIR=$VS_Root\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
@@ -52,14 +52,13 @@ jobs:
 
       - name: Build nextpnr
         working-directory: nextpnr
-        timeout-minutes: 240
         run: |
           $env:Path += ";"+$Env:BOOST_ROOT_1_72_0+"\lib"
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
           cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
-          msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln -v:diag
+          msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
         run: |
