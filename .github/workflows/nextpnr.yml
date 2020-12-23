@@ -56,7 +56,7 @@ jobs:
       - name: Install prjtrellis
         run: |
           mkdir releaseDir
-          cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
+          cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake -DBOOST_DEBUG=ON
           dir releaseDir
           dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release
 
