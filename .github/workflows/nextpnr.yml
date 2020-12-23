@@ -50,7 +50,7 @@ jobs:
           echo $Env:BOOST_LIBRARYDIR
           dir $Env:BOOST_INCLUDEDIR
           dir $Env:BOOST_LIBRARYDIR
-          cmake -DBoost_DEBUG=ON -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
+          cmake -DBoost_DEBUG=ON -DBoost_ARCHITECTURE=x64 -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           .$Env:BUILD_TOOLS_DIR\msbuild.exe /t:Build /p:Configuration=Release libtrellis.sln
           
       - name: Install prjtrellis
