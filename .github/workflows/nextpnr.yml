@@ -25,6 +25,9 @@ jobs:
       - name: Add Boost to VS
         run: |
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
+          echo $VS_Root
+          $VS_Root = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\VS"
+          echo $VS_Root
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include\boost -Destination "$VS_Root\include"
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Root\lib\x64"
           echo "BOOST_LIBRARYDIR=$VS_Root\lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -42,7 +45,7 @@ jobs:
         working-directory: prjtrellis\libtrellis\
         run: |
           cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
-          $BUILD_TOOLS_DIR\msbuild /t:Build /p:Configuration=Release libtrellis.sln
+          $Env:BUILD_TOOLS_DIR\msbuild.exe /t:Build /p:Configuration=Release libtrellis.sln
           
       - name: Install prjtrellis
         run: |
@@ -65,7 +68,7 @@ jobs:
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
           cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
-          $BUILD_TOOLS_DIR\msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
+          $Env:BUILD_TOOLS_DIR\msbuild.exe /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
         run: |
