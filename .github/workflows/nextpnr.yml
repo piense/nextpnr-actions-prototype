@@ -17,9 +17,6 @@ jobs:
   
       - name: Add Boost to VS
         run: |
-          echo $Env:BOOST_ROOT_1_72_0
-          dir $Env:BOOST_ROOT_1_72_0
-          dir $Env:BOOST_ROOT_1_72_0\lib
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\include\boost -Destination "$VS_Root\include"
           Copy-Item -Recurse $Env:BOOST_ROOT_1_72_0\lib\* -Destination "$VS_Root\lib\x64"
