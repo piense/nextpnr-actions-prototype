@@ -41,9 +41,15 @@ jobs:
         run: |
           $Env:Python_ROOT_DIR = $Env:GITHUB_WORKSPACE+"\python"
           echo $Env:Python_ROOT_DIR
-          cmake -DPYTHON_ROOT_DIR='$Env:GITHUB_WORKSPACE\python' -DPYTHON_FIND_REGISTRY=NEVER -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
+          cmake -DPython_FIND_REGISTRY=NEVER -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
-          
+      
+      - name: publish stuff
+        if: always()
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          path: prjtrellis
+      
       - name: Install prjtrellis
         run: |
           mkdir releaseDir
