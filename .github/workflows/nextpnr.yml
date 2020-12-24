@@ -34,6 +34,7 @@ jobs:
       # and build instead of using GitHub's prebuilt cache
       - name: Download & Build Boost
         run: |
+          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
           choco install 7zip
           $WebClient = New-Object System.Net.WebClient
           $WebClient.DownloadFile("https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.zip",(Get-Location).tostring()+"\boost_1_73_0.7z")
@@ -70,7 +71,8 @@ jobs:
         working-directory: prjtrellis\libtrellis\
         run: |
           echo $Env:PYTHON_EXE
-          cmake --debug-find -DPYTHON_EXECUTABLE=$Env:PYTHON_EXE -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
+          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
+          cmake --debug-find -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
     
       
@@ -91,10 +93,11 @@ jobs:
         timeout-minutes: 240
         run: |
           $env:Path += ";"+$Env:BOOST_ROOT_1_72_0+"\lib"
+          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
-          cmake . -DPYTHON_EXECUTABLE=$Env:PYTHON_EXE -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
+          cmake . --debug-find -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
