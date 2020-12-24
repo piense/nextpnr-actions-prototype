@@ -8,12 +8,20 @@ on:
 jobs:
   next-pnr:
     name: prjtrellis
-    runs-on: self-hosted
+    #runs-on: self-hosted
+    runs-on: windows-2019
     timeout-minutes: 240
 
     steps:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
+  
+      # nextpnr fails to build with Python 3.7.9, not entirely sure why,
+      # but there's weird errors about 'copysign' in the VS header files
+      # so upgrade. should be able to remove this if GitHub upgrades their images
+      - name: Upgrade Python
+        run: |
+          choco upgrade python
   
       - name: Add Boost to VS
         run: |
