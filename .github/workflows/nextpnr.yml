@@ -8,7 +8,7 @@ on:
 jobs:
   next-pnr:
     name: prjtrellis
-    runs-on: windows-2019
+    runs-on: self-hosted
     timeout-minutes: 240
 
     steps:
