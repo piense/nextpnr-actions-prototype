@@ -39,7 +39,8 @@ jobs:
       - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-          cmake --debug-find -DPYTHON_EXECUTABLE=$Env:GITHUB_WORKSPACE\python\python.exe -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"'  .
+          echo $Env:GITHUB_WORKSPACE
+          cmake --debug-find -DPYTHON_EXECUTABLE=$Env:GITHUB_WORKSPACE/python/python.exe -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"'  .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
     
       
