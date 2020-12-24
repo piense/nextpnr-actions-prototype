@@ -25,7 +25,7 @@ jobs:
           $WebClient = New-Object System.Net.WebClient
           $WebClient.DownloadFile("https://www.python.org/ftp/python/3.9.1/python-3.9.1-amd64.exe",(Get-Location).tostring()+"\python3.exe")
           $proc = Start-Process -FilePath .\python3.exe -ArgumentList " /quiet InstallAllUsers=0 PrependPath=1 Include_test=0 TargetDir=$Env:GITHUB_WORKSPACE\python"
-
+          dir $Env:GITHUB_WORKSPACE\python
   
       # The python version with Boost should match what's on the systems so we need to download
       # and build instead of using GitHub's prebuilt cache
@@ -71,7 +71,7 @@ jobs:
       - name: Install prjtrellis
         run: |
           mkdir releaseDir
-          cmake -DPYTHON_LIBRARY='$Env:GITHUB_WORKSPACE\python\libs\' -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
+          cmake -DPython_ROOT_DIR='$Env:GITHUB_WORKSPACE\python' -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
           dir releaseDir
           dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release
       - name: Checkout nextpnr
@@ -88,7 +88,7 @@ jobs:
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
-          cmake . -DPYTHON_LIBRARY='$Env:GITHUB_WORKSPACE\python\libs\' -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
+          cmake . -DPython_ROOT_DIR='$Env:GITHUB_WORKSPACE\python' -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
