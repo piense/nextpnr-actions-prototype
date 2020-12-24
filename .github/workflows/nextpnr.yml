@@ -40,7 +40,7 @@ jobs:
         working-directory: prjtrellis\libtrellis\
         run: |
           Remove-Item -Recurse -Force C:/hostedtoolcache/windows/Python
-          cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DPython_ROOT_DIR=$Env:GITHUB_WORKSPACE/python/ -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"'  .
+          cmake --debug-find -DPython_ROOT_DIR=$Env:GITHUB_WORKSPACE/python/ -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"'  .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
       
       - name: publish stuff
