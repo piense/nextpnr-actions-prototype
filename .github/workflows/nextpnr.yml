@@ -32,9 +32,9 @@ jobs:
           $WebClient.DownloadFile("https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.zip",(Get-Location).tostring()+"\boost_1_73_0.7z")
           set-alias sz "$env:ProgramFiles\7-Zip\7z.exe"
           sz x ".\boost_1_73_0.7z"
-
+          $vs_env = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\Build\vcvarsamd64_x86.bat"
           & {
-          (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)\VC\Auxiliary\Build\vcvarsamd64_x86.bat
+          .$vs_env
           cd boost_1_73_0
           .\bootstrap.bat
           # Python wants the shared versions so lets do those
