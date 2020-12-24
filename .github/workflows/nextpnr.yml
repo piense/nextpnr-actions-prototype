@@ -39,7 +39,7 @@ jobs:
       - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-          cmake -DPython_ROOT_DIR='$Env:GITHUB_WORKSPACE\python' -DPython_FIND_REGISTRY=NEVER -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
+          cmake -DPYTHON_ROOT_DIR='$Env:GITHUB_WORKSPACE\python' -DPYTHON_FIND_REGISTRY=NEVER -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
           
       - name: Install prjtrellis
