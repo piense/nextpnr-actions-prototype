@@ -25,7 +25,7 @@ jobs:
           $WebClient = New-Object System.Net.WebClient
           $WebClient.DownloadFile("https://www.python.org/ftp/python/3.9.1/python-3.9.1-amd64.exe",(Get-Location).tostring()+"\python3.exe")
           $proc = Start-Process -FilePath .\python3.exe -ArgumentList " /quiet InstallAllUsers=0 PrependPath=1 Include_test=0 TargetDir=$Env:GITHUB_WORKSPACE\python"
-          dir $Env:GITHUB_WORKSPACE\python
+          dir $Env:GITHUB_WORKSPACE
   
       # The python version with Boost should match what's on the systems so we need to download
       # and build instead of using GitHub's prebuilt cache
