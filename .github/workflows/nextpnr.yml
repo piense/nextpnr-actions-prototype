@@ -112,9 +112,7 @@ jobs:
           path: $Env:GITHUB_WORKSPACE
           #if-no-files-found: error
 
-      - name: Build nextpnr
-        working-directory: nextpnr
-        timeout-minutes: 240
+      - name: Copy Boost Into Release
         run: |
           Copy-Item -Recurse "boost_1_73_0\stage\lib\*.dll" -Destination "releaseDir"
           
