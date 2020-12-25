@@ -93,7 +93,7 @@ jobs:
         working-directory: nextpnr
         timeout-minutes: 240
         run: |
-          $env:Path += ";"+$Env:BOOST_ROOT_1_72_0+"\lib"
+          $env:Path += ";"+$Env:GITHUB_WORKSPACE+"\boost_1_73_0\stage\lib"
           $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
