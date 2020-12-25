@@ -109,7 +109,7 @@ jobs:
         uses: actions/upload-artifact@v2.2.1
         with:
           name: nextpnr-all
-          path: $Env:GITHUB_WORKSPACE
+          path: .
           #if-no-files-found: error
 
       - name: Copy Boost Into Release
@@ -120,5 +120,5 @@ jobs:
         uses: actions/upload-artifact@v2.2.1
         with:
           name: nextpnr
-          path: $Env:GITHUB_WORKSPACE\releaseDir
+          path: .\releaseDir
           #if-no-files-found: error
