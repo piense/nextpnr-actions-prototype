@@ -91,7 +91,6 @@ jobs:
 
       - name: Build nextpnr
         working-directory: nextpnr
-        timeout-minutes: 240
         run: |
           $env:Path += ";"+$Env:GITHUB_WORKSPACE+"\boost_1_73_0\stage\lib"
           $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
@@ -105,3 +104,23 @@ jobs:
         run: |
           cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\nextpnr\cmake_install.cmake 
           dir releasedir
+          
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: nextpnr-all
+          path: $Env:GITHUB_WORKSPACE
+          #if-no-files-found: error
+
+      - name: Build nextpnr
+        working-directory: nextpnr
+        timeout-minutes: 240
+        run: |
+          Copy-Item -Recurse "boost_1_73_0\stage\lib\*.dll" -Destination "releaseDir"
+          
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: nextpnr
+          path: $Env:GITHUB_WORKSPACE\releaseDir
+          #if-no-files-found: error
