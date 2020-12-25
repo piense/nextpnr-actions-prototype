@@ -49,6 +49,8 @@ jobs:
           # CMake seems to want to find both when creating project files even if we only use one
           .\b2 link=shared runtime-link=shared variant=release
           .\b2 link=shared runtime-link=shared variant=debug
+          .\b2 link=static runtime-link=static variant=release
+          .\b2 link=static runtime-link=static variant=debug
           }
 
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
@@ -72,7 +74,7 @@ jobs:
         run: |
           echo $Env:PYTHON_EXE
           $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
-          cmake --debug-find -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK"' .
+          cmake --debug-find .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
     
       
@@ -96,7 +98,7 @@ jobs:
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
-          cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "BOOST_ALL_DYN_LINK" /D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
+          cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
