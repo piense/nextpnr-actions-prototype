@@ -10,7 +10,6 @@ jobs:
     name: prjtrellis
     #runs-on: self-hosted
     runs-on: windows-2019
-    timeout-minutes: 240
 
     steps:
       - name: Setup msbuild
@@ -114,7 +113,7 @@ jobs:
 
       - name: Copy Boost Into Release
         run: |
-          Copy-Item -Recurse "boost_1_73_0\stage\lib\*.dll" -Destination "releaseDir"
+          Copy-Item -Recurse "boost_1_73_0\stage\lib\*.dll" -Destination "releaseDir\bin"
           
       - name: Upload Binaries
         uses: actions/upload-artifact@v2.2.1
