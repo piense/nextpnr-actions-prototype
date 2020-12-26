@@ -47,8 +47,6 @@ jobs:
           .\bootstrap.bat
           # Python wants the shared versions so lets do those
           # CMake seems to want to find both when creating project files even if we only use one
-          .\b2 link=shared runtime-link=shared variant=release
-          .\b2 link=shared runtime-link=shared variant=debug
           .\b2 link=static runtime-link=static variant=release
           .\b2 link=static runtime-link=static variant=debug
           }
@@ -74,10 +72,9 @@ jobs:
         run: |
           echo $Env:PYTHON_EXE
           $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
-          cmake --debug-find .
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
     
-      
       - name: Install prjtrellis
         run: |
           mkdir releaseDir
@@ -98,7 +95,7 @@ jobs:
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
-          cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
+          cmake . -DSTATIC_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
