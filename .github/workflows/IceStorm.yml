@@ -43,31 +43,41 @@ jobs:
           mkdir buildProducts
           pip3 install xdot
           mingw32-make -j4
-          mingw32-make DESTDIR=buildProducts PREFIX='' install
+          mingw32-make DESTDIR=../../buildProducts PREFIX='' install
           
-#      - name: Package icestorm
-#        working-directory: icestorm
-#        run: |
-#          $msys_root = "C:\msys64\mingw64\bin"
-#          $releaseDir = "buildProducts"
-#          dir "C:\msys64\mingw64\bin\"
-          
-#          Copy-Item $msys_root\tcl86.dll -Destination $releaseDir"\bin"
-#          Copy-Item $msys_root\libgcc_s_seh-1.dll -Destination $releaseDir"\bin"
-#          Copy-Item $msys_root\zlib1.dll -Destination $releaseDir"\bin"
-#          Copy-Item $msys_root\libreadline8.dll -Destination $releaseDir"\bin"
-#          Copy-Item $msys_root\libstdc++-6.dll -Destination $releaseDir"\bin"
-#          Copy-Item $msys_root\libwinpthread-1.dll -Destination $releaseDir"\bin"
-#          Copy-Item $msys_root\libtermcap-0.dll -Destination $releaseDir"\bin"
-          
- #         dir buildProducts
+      # TODO Tests of some kind to validate it built properly
           
       - name: Upload Zip
         uses: actions/upload-artifact@v2
         with:
           if-no-files-found: error
           name: icestorm
-          path: icestorm
+          path: buildProducts
 
-      
+      - name: Zip Release Files
+        run: |
+          Compress-Archive -Path .\buildProducts\* -DestinationPath buildProducts.zip
+
+      - name: Get current date
+        id: date
+        run: echo "name=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: actions/create-release@v1.1.4
+        id: create_release
+        with:
+          tag_name: IceStorm-${{ steps.date.outputs.date }}
+          release_name: IceStorm-${{ steps.date.outputs.date }}
+          body: Nightly build for IceStorm
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1.0.2
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          # The path to the asset you want to upload
+          asset_path: buildProducts.zip
+          # The name of the asset you want to upload
+          asset_name: IceStorm-Win-x86_64-${{ steps.date.outputs.date }}.zip
+          # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
+          asset_content_type: application/zip
     
