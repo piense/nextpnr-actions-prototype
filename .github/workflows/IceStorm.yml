@@ -65,6 +65,8 @@ jobs:
       - name: Create Release
         uses: actions/create-release@v1.1.4
         id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: IceStorm-${{ steps.date.outputs.date }}
           release_name: IceStorm-${{ steps.date.outputs.date }}
@@ -72,6 +74,8 @@ jobs:
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           # The path to the asset you want to upload
