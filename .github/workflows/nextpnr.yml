@@ -31,12 +31,12 @@ jobs:
           
           $PYTHON_EXE = $Env:GITHUB_WORKSPACE + "\python\python.exe"
           echo "PYTHON_EXE=$PYTHON_EXE" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo $Env:GITHUB_WORKSPACE + "\python\" >> $Env:GITHUB_PATH
           
       # The python version with Boost should match what's on the systems so we need to download
       # and build instead of using GitHub's prebuilt cache
       - name: Download & Build Boost
         run: |
-          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
           choco install 7zip
           $WebClient = New-Object System.Net.WebClient
           $WebClient.DownloadFile("https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.zip",(Get-Location).tostring()+"\boost_1_73_0.7z")
@@ -60,6 +60,7 @@ jobs:
 
           echo "BOOST_LIBRARYDIR=$VS_Root\lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "BOOST_INCLUDEDIR=$VS_Root\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo $Env:GITHUB_WORKSPACE+"\boost_1_73_0\stage\lib" >> $Env:GITHUB_PATH
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
@@ -72,8 +73,6 @@ jobs:
       - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-          echo $Env:PYTHON_EXE
-          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
           cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
     
@@ -92,8 +91,6 @@ jobs:
       - name: Build nextpnr
         working-directory: nextpnr
         run: |
-          $env:Path += ";"+$Env:GITHUB_WORKSPACE+"\boost_1_73_0\stage\lib"
-          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
