@@ -6,8 +6,8 @@ on:
     paths: '.github/workflows/icestorm.yml'
 
 jobs:
-  build-yosys:
-    name: Build Yosys
+  build-IceStorm:
+    name: Build IceStorm
     runs-on: windows-2019
 
     steps:
