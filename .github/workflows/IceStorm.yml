@@ -66,7 +66,7 @@ jobs:
             github.git.updateRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "refs/tags/icestorm/nightly",
+              ref: "tags/icestorm/nightly",
               sha: context.sha
             })
 
