@@ -58,6 +58,18 @@ jobs:
         run: |
           Compress-Archive -Path .\buildProducts\* -DestinationPath buildProducts.zip
 
+      - name: Create tag
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/icestorm/nightly",
+              sha: context.sha
+            })
+
       - name: Get current date
         id: date
         run: echo "name=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
@@ -68,8 +80,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: IceStorm-${{ steps.date.outputs.date }}
-          release_name: IceStorm-${{ steps.date.outputs.date }}
+          tag_name: icestorm/nightly
+          release_name: IceStorm Nightly
           body: Nightly build for IceStorm
 
       - name: Upload Release Asset
