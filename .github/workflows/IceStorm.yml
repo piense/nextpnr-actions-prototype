@@ -1,0 +1,74 @@
+name: IceStorm
+
+on:
+  workflow_dispatch:
+  push:
+    paths: '.github/workflows/icestorm.yml'
+
+jobs:
+  build-yosys:
+    name: Build Yosys
+    runs-on: windows-2019
+
+    steps:
+      - name: Checkout IceStorm
+        uses: actions/checkout@v2
+        with:
+          repository: YosysHQ/icestorm
+          path: icestorm
+          
+      - name: Setup Msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            msys/bison
+            msys/flex
+            msys/libreadline-devel
+            msys/gawk
+            msys/tcl
+            msys/libffi-devel
+            msys/pkg-config
+            git
+            python3
+            mingw64/mingw-w64-x86_64-python3-pip
+            mingw64/mingw-w64-x86_64-dlfcn
+            mingw-w64-x86_64-toolchain
+
+      - name: Build IceStorm
+        shell: msys2 {0}
+        working-directory: icestorm
+        run: |
+          mkdir buildProducts
+          pip3 install xdot
+          mingw32-make config-msys2-64
+          mingw32-make -j4
+          mingw32-make DESTDIR=buildProducts PREFIX='' install
+          
+#      - name: Package icestorm
+#        working-directory: icestorm
+#        run: |
+#          $msys_root = "C:\msys64\mingw64\bin"
+#          $releaseDir = "buildProducts"
+#          dir "C:\msys64\mingw64\bin\"
+          
+#          Copy-Item $msys_root\tcl86.dll -Destination $releaseDir"\bin"
+#          Copy-Item $msys_root\libgcc_s_seh-1.dll -Destination $releaseDir"\bin"
+#          Copy-Item $msys_root\zlib1.dll -Destination $releaseDir"\bin"
+#          Copy-Item $msys_root\libreadline8.dll -Destination $releaseDir"\bin"
+#          Copy-Item $msys_root\libstdc++-6.dll -Destination $releaseDir"\bin"
+#          Copy-Item $msys_root\libwinpthread-1.dll -Destination $releaseDir"\bin"
+#          Copy-Item $msys_root\libtermcap-0.dll -Destination $releaseDir"\bin"
+          
+ #         dir buildProducts
+          
+      - name: Upload Zip
+        uses: actions/upload-artifact@v2
+        with:
+          if-no-files-found: error
+          name: icestorm
+          path: icestorm
+
+      
+    
