@@ -18,11 +18,13 @@ jobs:
       # nextpnr fails to build with Python 3.7.9, not entirely sure why,
       # but there's weird errors about 'copysign' in the VS header files.
       # Might be conflicting macro definitions for copysign.
-      # Should be able to remove this if GitHub upgrades their images
+      # Should be able to remove this if GitHub upgrades their images though
+      # matching the Msys version for Project IceStorm might be a good idea, currently 3.8.6
       - name: Upgrade Python
         run: |
           $WebClient = New-Object System.Net.WebClient
-          $WebClient.DownloadFile("https://www.python.org/ftp/python/3.9.1/python-3.9.1-amd64.exe",(Get-Location).tostring()+"\python3.exe")
+          
+          $WebClient.DownloadFile("https://www.python.org/ftp/python/3.8.6/python-3.8.6-amd64.exe",(Get-Location).tostring()+"\python3.exe")
           cmd /c start /wait python3.exe /quiet TargetDir=$Env:GITHUB_WORKSPACE\python Shortcuts=0 Include_launcher=1 PrependPath=1
           cmd /c mklink $Env:GITHUB_WORKSPACE\python\python3.exe $Env:GITHUB_WORKSPACE\python\python.exe
           dir $Env:GITHUB_WORKSPACE\python
