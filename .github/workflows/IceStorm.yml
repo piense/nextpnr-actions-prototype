@@ -3,7 +3,7 @@ name: IceStorm
 on:
   workflow_dispatch:
   push:
-    paths: '.github/workflows/icestorm.yml'
+    paths: '.github/workflows/IceStorm.yml'
 
 jobs:
   build-IceStorm:
