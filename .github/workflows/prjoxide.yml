@@ -30,8 +30,8 @@ jobs:
         shell: msys2 {0}
         working-directory: prjoxide/libprjoxide
         run: |
-          mkdir ..\..\buildProducts
-          cargo install --path prjoxide --root ..\..\prjoxideRelease
+          mkdir ../../buildProducts
+          cargo install --path prjoxide --root ../../prjoxideRelease
           
       # TODO Tests of some kind to validate it built properly
           
