@@ -30,8 +30,8 @@ jobs:
         shell: msys2 {0}
         working-directory: prjoxide/libprjoxide
         run: |
-          mkdir ../../buildProducts
-          cargo install --path prjoxide --root ../../prjoxideRelease
+          mkdir output
+          cargo install --path prjoxide --root ./output
           
       # TODO Tests of some kind to validate it built properly
           
@@ -40,7 +40,7 @@ jobs:
         with:
           if-no-files-found: error
           name: prjoxide
-          path: buildProducts
+          path: .
 
       - name: Zip Release Files
         run: |
