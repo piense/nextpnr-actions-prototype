@@ -1,0 +1,56 @@
+name: prjtrellis
+
+on:
+  workflow_dispatch:
+  push:
+    paths: '.github/workflows/prjtrellis.yml'
+    
+jobs:
+  prjtrellis:
+    name: prjtrellis
+    #runs-on: self-hosted
+    runs-on: windows-2019
+
+    steps:
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v1
+  
+      - name: Install Boost & Python
+        run: |
+          vcpkg.exe install boost
+          vcpkg.exe integrate install
+
+      - name: Checkout prjtrellis
+        uses: actions/checkout@v2
+        with:
+          repository: YosysHQ/prjtrellis
+          path: prjtrellis
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Build prjtrellis
+        working-directory: prjtrellis\libtrellis\
+        run: |
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF .
+          msbuild /t:Build /p:Configuration=Release libtrellis.sln
+    
+      - name: Install prjtrellis
+        run: |
+          mkdir releaseDir
+          cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
+          dir releaseDir
+          dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release
+      
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: prjtrellis-all
+          path: .
+          #if-no-files-found: error
+          
+      - name: Upload Binaries
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: prjtrellis
+          path: .\releaseDir
+          #if-no-files-found: error
