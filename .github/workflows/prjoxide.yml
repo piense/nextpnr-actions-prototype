@@ -40,11 +40,11 @@ jobs:
         with:
           if-no-files-found: error
           name: prjoxide
-          path: .
+          path: prjoxide/libprjoxide/output/
 
       - name: Zip Release Files
         run: |
-          Compress-Archive -Path .\buildProducts\* -DestinationPath buildProducts.zip
+          Compress-Archive -Path .\prjoxide\libprjoxide\output\* -DestinationPath buildProducts.zip
 
       - name: Create tag
         uses: actions/github-script@v3
