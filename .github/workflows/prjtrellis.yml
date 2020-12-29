@@ -33,7 +33,7 @@ jobs:
         run: |
           $PYTHON_EXECUTABLE= (Get-ChildItem "C:\vcpkg\downloads\tools\python" -Recurse | Where-Object { $_.Name.Equals("python.exe")}).FullName
           echo $PYTHON_EXECUTABLE
-          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DPYTHON_EXECUTABLE=$PYTHON_EXECUTABLE .
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DPYTHON_EXECUTABLE="$PYTHON_EXECUTABLE".
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
     
       - name: Install prjtrellis
