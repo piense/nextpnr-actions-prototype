@@ -15,10 +15,20 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
   
+      - name: Checkout vcpkg
+        uses: actions/checkout@v2
+        with:
+          repository: microsoft/vcpkg
+          path: vcpkg
+          submodules: recursive
+          fetch-depth: 0      
+  
       - name: Install Boost & Python
+        working-directory: vcpkg
         run: |
-          vcpkg.exe install boost
-          vcpkg.exe integrate install
+          .\bootstrap-vcpkg.bat
+          .\vcpkg.exe install boost
+          .\vcpkg.exe integrate install
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
@@ -31,9 +41,9 @@ jobs:
       - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-          $PYTHON_EXECUTABLE= (Get-ChildItem "C:\vcpkg\" -Recurse | Where-Object { $_.Name.Equals("python.exe")}).FullName
+          $PYTHON_EXECUTABLE= (Get-ChildItem "$Env:GITHUB_WORKSPACE\vcpkg\" -Recurse | Where-Object { $_.Name.Equals("python.exe")}).FullName
           echo $PYTHON_EXECUTABLE
-          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DPYTHON_EXECUTABLE="$PYTHON_EXECUTABLE".
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE="$Env:GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake" -DPYTHON_EXECUTABLE="$PYTHON_EXECUTABLE".
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
     
       - name: Upload Binaries
