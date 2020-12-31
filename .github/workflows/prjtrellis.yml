@@ -45,14 +45,7 @@ jobs:
           echo $PYTHON_EXECUTABLE
           cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE="$Env:GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake" -DPYTHON_EXECUTABLE="$PYTHON_EXECUTABLE".
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
-    
-      - name: Upload Binaries
-        uses: actions/upload-artifact@v2.2.1
-        if: ${{ always() }}
-        with:
-          name: prjtrellis-all
-          path: C:/vcpkg
-    
+
       - name: Install prjtrellis
         run: |
           mkdir releaseDir
@@ -64,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v2.2.1
         with:
           name: prjtrellis-all
-          path: .
+          path: ./prjtrellis
           #if-no-files-found: error
           
       - name: Upload Binaries
