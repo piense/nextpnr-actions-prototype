@@ -14,21 +14,11 @@ jobs:
     steps:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
-  
-      - name: Checkout vcpkg
-        uses: actions/checkout@v2
-        with:
-          repository: microsoft/vcpkg
-          path: vcpkg
-          submodules: recursive
-          fetch-depth: 0      
-  
-      - name: Install Boost & Python
-        working-directory: vcpkg
+
+      - name: Install Boost
         run: |
-          .\bootstrap-vcpkg.bat
-          .\vcpkg.exe install boost
-          .\vcpkg.exe integrate install
+          vcpkg.exe install boost
+          vcpkg.exe integrate install
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
@@ -41,9 +31,9 @@ jobs:
       - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-          $PYTHON_EXECUTABLE= (Get-ChildItem "$Env:GITHUB_WORKSPACE\vcpkg\installed\x86-windows\tools" -Recurse | Where-Object { $_.Name.Equals("python.exe")}).FullName
-          echo $PYTHON_EXECUTABLE
-          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE="$Env:GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake" -DPYTHON_EXECUTABLE="$PYTHON_EXECUTABLE".
+          $find_boost = (Get-ChildItem "C:\vcpkg\" -Recurse | Where-Object { $_.Name.Equals("config.hpp")}).FullName
+          echo $find_boost
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE="$Env:GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake" -DBOOST_ROOT="C:\vcpkg\intalled\x86-windows\" -DBoost_DEBUG=ON .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
 
       - name: Install prjtrellis
