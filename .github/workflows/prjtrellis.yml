@@ -33,7 +33,7 @@ jobs:
         run: |
           $find_boost = (Get-ChildItem "C:\vcpkg\" -Recurse | Where-Object { $_.Name.Equals("config.hpp")}).FullName
           echo $find_boost
-          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE="$Env:GITHUB_WORKSPACE/vcpkg/scripts/buildsystems/vcpkg.cmake" -DBOOST_ROOT="C:\vcpkg\intalled\x86-windows\" -DBoost_DEBUG=ON .
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DBOOST_ROOT="C:\vcpkg\intalled\x86-windows\" -DBoost_DEBUG=ON .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
 
       - name: Install prjtrellis
