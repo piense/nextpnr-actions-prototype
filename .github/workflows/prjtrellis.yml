@@ -21,29 +21,28 @@ jobs:
       # seems to be supported by everything else so sticking with it
       - name: Upgrade Python
         run: |
-          $WebClient = New-Object System.Net.WebClient
-          
+          $WebClient = New-Object System.Net.WebClient          
           $WebClient.DownloadFile("https://www.python.org/ftp/python/3.8.7/python-3.8.7-amd64.exe",(Get-Location).tostring()+"\python3.exe")
           cmd /c start /wait python3.exe /quiet TargetDir=$Env:GITHUB_WORKSPACE\python Shortcuts=0 Include_launcher=1 PrependPath=1
           cmd /c mklink $Env:GITHUB_WORKSPACE\python\python3.exe $Env:GITHUB_WORKSPACE\python\python.exe
-          dir $Env:GITHUB_WORKSPACE\python
-          
           echo ($Env:GITHUB_WORKSPACE) + "\python\" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Download & Build Boost
         run: |
-          choco install 7zip
+          choco install 7zip -y
           $WebClient = New-Object System.Net.WebClient
           $WebClient.DownloadFile("https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.zip",(Get-Location).tostring()+"\boost_1_73_0.7z")
           set-alias sz "$env:ProgramFiles\7-Zip\7z.exe"
           sz x ".\boost_1_73_0.7z"
           $vs_env = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\Build\vcvarsamd64_x86.bat"
+          $pythonDir=($Env:GITHUB_WORKSPACE.replace('\','/') + "/python/")
           & {
           .$vs_env
           cd boost_1_73_0
           .\bootstrap.bat
-          .\b2 link=static runtime-link=static variant=release
-          .\b2 link=static runtime-link=static variant=debug
+          echo "using python : 3.8 : $pythonDir ;" | Out-File "project-config.jam" -encoding ASCII -Append
+          .\b2 link=static runtime-link=static variant=release python=3.8
+          .\b2 link=static runtime-link=static variant=debug python=3.8
           }
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
           Copy-Item -Recurse "boost" -Destination "$VS_Root\include"
