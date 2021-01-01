@@ -61,9 +61,7 @@ jobs:
       - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-
-          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
-          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DBoost_DEBUG=ON --trace .
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DBoost_DEBUG=ON --trace -DPython_EXECUTABLE="$Env:GITHUB_WORKSPACE/python/python.exe" .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
 
       - name: Install prjtrellis
