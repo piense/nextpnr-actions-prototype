@@ -14,11 +14,27 @@ jobs:
     steps:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
-
-      - name: Install Boost
+        
+      - name: Download & Build Boost
         run: |
-          vcpkg.exe install boost:x64-windows-static
-          vcpkg.exe integrate install
+          choco install 7zip
+          $WebClient = New-Object System.Net.WebClient
+          $WebClient.DownloadFile("https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.zip",(Get-Location).tostring()+"\boost_1_73_0.7z")
+          set-alias sz "$env:ProgramFiles\7-Zip\7z.exe"
+          sz x ".\boost_1_73_0.7z"
+          $vs_env = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\Build\vcvarsamd64_x86.bat"
+          & {
+          .$vs_env
+          cd boost_1_73_0
+          .\bootstrap.bat
+          .\b2 link=static runtime-link=static variant=release
+          .\b2 link=static runtime-link=static variant=debug
+          }
+          $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
+          Copy-Item -Recurse "boost" -Destination "$VS_Root\include"
+          Copy-Item -Recurse "stage\lib\*" -Destination "$VS_Root\lib\x64"
+          echo "BOOST_LIBRARYDIR=$VS_Root\lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "BOOST_INCLUDEDIR=$VS_Root\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Checkout prjtrellis
         uses: actions/checkout@v2
@@ -31,10 +47,7 @@ jobs:
       - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-          $find_boost = (Get-ChildItem "C:\vcpkg\" -Recurse | Where-Object { $_.Name.Equals("config.hpp")}).FullName
-          echo $find_boost
-          dir C:\vcpkg\installed
-          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -DBOOST_ROOT="C:/vcpkg/installed/x64-windows-static" -DBoost_DEBUG=ON .
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DBoost_DEBUG=ON .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
 
       - name: Install prjtrellis
