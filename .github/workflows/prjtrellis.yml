@@ -65,7 +65,7 @@ jobs:
         run: |
           echo $Env:PYTHON_EXE
           $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
-          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DBoost_DEBUG=ON .
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DBoost_DEBUG=ON --trace .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
 
       - name: Install prjtrellis
