@@ -86,3 +86,31 @@ jobs:
           name: prjtrellis
           path: .\releaseDir
           #if-no-files-found: error
+
+      - name: Zip Release Files
+        run: |
+          Compress-Archive -Path .\releaseDir\* -DestinationPath buildProducts.zip
+
+      - name: Update tag
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.git.updateRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "tags/prjtrellis/nightly",
+              sha: context.sha
+            })
+            
+      - name: Deploy Nightly
+        uses: WebFreak001/deploy-nightly@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: https://uploads.github.com/repos/davidcorrigan714/nextpnr-actions-prototype/releases/35905136/assets{?name,label}
+          release_id: 35905136
+          asset_path: ./buildProducts.zip
+          asset_name: prjtrellis-win-x86_64-py38-$$.zip
+          asset_content_type: application/zip
+          max_releases: 20
