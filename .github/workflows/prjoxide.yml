@@ -6,6 +6,8 @@ on:
     paths: '.github/workflows/prjoxide.yml'
     branches:
       - main
+  schedule:
+    - cron: "7 0 * * *"
 jobs:
   build-prjoxide:
     name: Project Oxide
