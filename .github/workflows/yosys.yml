@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths: '.github/workflows/yosys.yml'
-  
+    branches:
+      - main
 
 jobs:
   build-yosys:
