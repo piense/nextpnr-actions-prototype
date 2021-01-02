@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths: '.github/workflows/IceStorm.yml'
-
+    branches:
+      - main
 jobs:
   build-IceStorm:
     name: Build IceStorm
