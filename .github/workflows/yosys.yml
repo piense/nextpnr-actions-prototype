@@ -6,7 +6,8 @@ on:
     paths: '.github/workflows/yosys.yml'
     branches:
       - main
-
+  schedule:
+    - cron: "7 0 * * *"
 jobs:
   build-yosys:
     name: Build Yosys
