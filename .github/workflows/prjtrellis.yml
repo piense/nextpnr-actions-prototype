@@ -15,7 +15,6 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
 
-
       # Have to be careful with the Python version,
       # there's a conflict with MSVC headers and the copysign function
       # that was patched in Nov/Dec 2020 and backported to 3.8.8 and that
@@ -25,13 +24,12 @@ jobs:
           $WebClient = New-Object System.Net.WebClient          
           $WebClient.DownloadFile("https://www.python.org/ftp/python/3.8.7/python-3.8.7-amd64.exe",(Get-Location).tostring()+"\python3.exe")
           cmd /c start /wait python3.exe /quiet TargetDir=$Env:GITHUB_WORKSPACE\python Shortcuts=0 Include_launcher=1 PrependPath=1
+          cmd /c mklink $Env:GITHUB_WORKSPACE\python\python3.exe $Env:GITHUB_WORKSPACE\python\python.exe
           echo ($Env:GITHUB_WORKSPACE + "\python\") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           cat $env:GITHUB_PATH
 
-
       - name: Download & Build Boost
         run: |
-          echo $Env:PATH
           choco install 7zip -y
           $WebClient = New-Object System.Net.WebClient
           $WebClient.DownloadFile("https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.zip",(Get-Location).tostring()+"\boost_1_73_0.7z")
@@ -43,8 +41,9 @@ jobs:
           .$vs_env
           cd boost_1_73_0
           .\bootstrap.bat
-          .\b2 link=static runtime-link=static variant=release
-          .\b2 link=static runtime-link=static variant=debug
+          echo "using python : 3.8 : $pythonDir ;" | Out-File "project-config.jam" -encoding ASCII -Append
+          .\b2 link=static runtime-link=static variant=release python=3.8
+          .\b2 link=static runtime-link=static variant=debug python=3.8
           }
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
           Copy-Item -Recurse "boost" -Destination "$VS_Root\include"
@@ -63,7 +62,8 @@ jobs:
       - name: Build prjtrellis
         working-directory: prjtrellis\libtrellis\
         run: |
-          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DBoost_DEBUG=ON --trace  .
+          $Python_EXECUTABLE = $env:GITHUB_PATH + "\python\python.exe"
+          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DPython_EXECUTABLE=$Python_EXECUTABLE -DBoost_DEBUG=ON --trace .
           msbuild /t:Build /p:Configuration=Release libtrellis.sln
 
       - name: Install prjtrellis
