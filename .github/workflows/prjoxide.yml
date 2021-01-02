@@ -46,7 +46,7 @@ jobs:
         run: |
           Compress-Archive -Path .\prjoxide\libprjoxide\output\* -DestinationPath buildProducts.zip
 
-      - name: Create tag
+      - name: Update tag
         uses: actions/github-script@v3
         with:
           github-token: ${{ github.token }}
