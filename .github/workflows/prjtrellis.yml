@@ -16,6 +16,18 @@ jobs:
         uses: microsoft/setup-msbuild@v1
 
 
+      # Have to be careful with the Python version,
+      # there's a conflict with MSVC headers and the copysign function
+      # that was patched in Nov/Dec 2020 and backported to 3.8.8 and that
+      # seems to be supported by everything else so sticking with it
+      - name: Upgrade Python
+        run: |
+          $WebClient = New-Object System.Net.WebClient          
+          $WebClient.DownloadFile("https://www.python.org/ftp/python/3.8.7/python-3.8.7-amd64.exe",(Get-Location).tostring()+"\python3.exe")
+          cmd /c start /wait python3.exe /quiet TargetDir=$Env:GITHUB_WORKSPACE\python Shortcuts=0 Include_launcher=1 PrependPath=1
+          echo ($Env:GITHUB_WORKSPACE) + "\python\" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+
       - name: Download & Build Boost
         run: |
           choco install 7zip -y
