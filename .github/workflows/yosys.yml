@@ -73,6 +73,34 @@ jobs:
           name: yosys
           path: yosys\buildProducts\*
 
+      - name: Zip Release Files
+        run: |
+          Compress-Archive -Path .\yosys\buildProducts\* -DestinationPath buildProducts.zip
+
+      - name: Update tag
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.git.updateRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "tags/yosys/nightly",
+              sha: context.sha
+            })
+            
+      - name: Deploy Nightly
+        uses: WebFreak001/deploy-nightly@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: https://uploads.github.com/repos/davidcorrigan714/nextpnr-actions-prototype/releases/35905284/assets{?name,label}
+          release_id: 35905284
+          asset_path: ./buildProducts.zip
+          asset_name: yosys-win-x86_64-py38-$$.zip
+          asset_content_type: application/zip
+          max_releases: 20
+
   test-yosys:
     name: Yosys Sanity Check
     runs-on: windows-2019
