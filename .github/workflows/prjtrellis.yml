@@ -29,9 +29,8 @@ jobs:
           .$vs_env
           cd boost_1_73_0
           .\bootstrap.bat
-          echo "using python : 3.8 : $pythonDir ;" | Out-File "project-config.jam" -encoding ASCII -Append
-          .\b2 link=static runtime-link=static variant=release python=3.8
-          .\b2 link=static runtime-link=static variant=debug python=3.8
+          .\b2 link=static runtime-link=static variant=release
+          .\b2 link=static runtime-link=static variant=debug
           }
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
           Copy-Item -Recurse "boost" -Destination "$VS_Root\include"
