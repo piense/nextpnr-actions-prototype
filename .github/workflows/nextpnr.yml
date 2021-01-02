@@ -6,6 +6,8 @@ on:
     paths: '.github/workflows/nextpnr.yml'
     branches:
       - main
+  schedule:
+    - cron: "9 0 * * *"
 jobs:
   next-pnr:
     name: prjtrellis
