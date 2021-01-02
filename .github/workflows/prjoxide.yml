@@ -58,30 +58,14 @@ jobs:
               sha: context.sha
             })
 
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-
-      - name: Create Release
-        uses: actions/create-release@v1.1.4
-        id: create_release
+      - name: Deploy Nightly
+        uses: WebFreak001/deploy-nightly@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: prjoxide/nightly
-          release_name: prjoxide Nightly
-          body: Nightly build for prjoxide
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          # The path to the asset you want to upload
-          asset_path: buildProducts.zip
-          # The name of the asset you want to upload
-          asset_name: prjoxide-Win-x86_64-${{ steps.date.outputs.date }}.zip
-          # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
+          upload_url: https://uploads.github.com/repos/davidcorrigan714/nextpnr-actions-prototype/releases/35808209/assets{?name,label}
+          release_id: 35808209
+          asset_path: ./buildProducts.zip
+          asset_name: prjoxide-Win-x86_64-$$.zip
           asset_content_type: application/zip
-    
+          max_releases: 20
