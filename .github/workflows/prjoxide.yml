@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths: '.github/workflows/prjoxide.yml'
-
+    branches:
+      - main
 jobs:
   build-prjoxide:
     name: Project Oxide
