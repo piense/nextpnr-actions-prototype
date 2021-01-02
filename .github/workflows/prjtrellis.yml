@@ -25,7 +25,7 @@ jobs:
           $WebClient = New-Object System.Net.WebClient          
           $WebClient.DownloadFile("https://www.python.org/ftp/python/3.8.7/python-3.8.7-amd64.exe",(Get-Location).tostring()+"\python3.exe")
           cmd /c start /wait python3.exe /quiet TargetDir=$Env:GITHUB_WORKSPACE\python Shortcuts=0 Include_launcher=1 PrependPath=1
-          echo ($Env:GITHUB_WORKSPACE) + "\python\" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo ($Env:GITHUB_WORKSPACE + "\python\") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           cat $env:GITHUB_PATH
 
 
