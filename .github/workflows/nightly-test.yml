@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths: '.github/workflows/nightly-test.yml'
-
+    branches:
+      - main
 jobs:
   build-nightly-test:
     name: Nightly Test
