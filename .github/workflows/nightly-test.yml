@@ -6,6 +6,8 @@ on:
     paths: '.github/workflows/nightly-test.yml'
     branches:
       - main
+  schedule:
+    - cron: "7 0 * * *"
 jobs:
   build-nightly-test:
     name: Nightly Test
