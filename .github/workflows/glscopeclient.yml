@@ -6,7 +6,8 @@ on:
     paths: '.github/workflows/glscopeclient.yml'
     branches:
       - main
-
+  schedule:
+    - cron: "7 0 * * *"
 jobs:
   build-glscopeclient:
     name: Build glscopeclient
