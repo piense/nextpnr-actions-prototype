@@ -52,7 +52,7 @@ jobs:
             var https = require('https');
             var fs = require('fs');
 
-            var dest = '${process.env.GITHUB_WORKSPACE}/prjtrellis.zip';
+            var dest = 'prjtrellis.zip';
             var url = latestAssetUrl;
 
             var file = fs.createWriteStream(dest);
