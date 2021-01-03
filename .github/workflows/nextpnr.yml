@@ -48,7 +48,7 @@ jobs:
             console.log("Downloading: " + latestAssetUrl);
 
             var dest = 'prjtrellis.zip';
-            var url = latestAssetUrl;
+            var uri = latestAssetUrl;
 
             var fs = require('fs');
             var url = require('url');
@@ -75,7 +75,7 @@ jobs:
                 return deferred.promise;
             };
 
-            download(url, dest);
+            await download(uri, dest);
 
 
       - name: Upload a Build Artifact
