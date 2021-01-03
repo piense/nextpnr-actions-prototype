@@ -47,36 +47,27 @@ jobs:
 
             console.log("Downloading: " + latestAssetUrl);
 
-            var dest = 'prjtrellis.zip';
-            var uri = latestAssetUrl;
-
+            var https = require('https');
             var fs = require('fs');
-            var url = require('url');
+            var dest = 'prjtrellis.zip';
+            var url = latestAssetUrl;
+            var file = fs.createWriteStream(dest);
 
-            function download(uri, filename) {
-                var protocol = url.parse(uri).protocol.slice(0, -1);
-                var deferred = Q.defer();
-                var onError = function (e) {
-                    fs.unlink(filename);
-                    deferred.reject(e);
-                }
-                require(protocol).get(uri, function(response) {
-                    if (response.statusCode >= 200 && response.statusCode < 300) {
-                        var fileStream = fs.createWriteStream(filename);
-                        fileStream.on('error', onError);
-                        fileStream.on('close', deferred.resolve);
-                        response.pipe(fileStream);
-                    } else if (response.headers.location) {
-                        deferred.resolve(download(response.headers.location, filename));
-                    } else {
-                        deferred.reject(new Error(response.statusCode + ' ' + response.statusMessage));
-                    }
-                }).on('error', onError);
-                return deferred.promise;
+            const request = function(url) {
+              https.get(url, (response) => {
+                var body = [];
+                if (response.statusCode == 302) {
+                  body = [];
+                  request(response.headers.location);
+                } else {
+                  response.pipe(file);
+                  file.on('finish', function() {
+                    file.close();
+                  });
+                };
+              } ).on("error", /*...*/);
             };
-
-            await download(uri, dest);
-
+            request(url);
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.1
