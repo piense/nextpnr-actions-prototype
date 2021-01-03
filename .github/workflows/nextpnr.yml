@@ -61,6 +61,12 @@ jobs:
               });
             });
 
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: prjtrellis.zip
+          path: prjtrellis.zip
+
       - name: Unzip Prjtrellis
         run: |
           Expand-Archive -Path prjtrellis.zip  -DestinationPath .\prjtrellis
