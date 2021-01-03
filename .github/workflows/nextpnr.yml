@@ -18,6 +18,10 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
 
+      - name: Install follow-redirects
+        run: |
+          npm install -g follow-redirects
+
       - name: Download latest prjtrellis
         uses: actions/github-script@v3.1.0
         with:
