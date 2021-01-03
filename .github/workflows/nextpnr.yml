@@ -116,6 +116,12 @@ jobs:
           echo "BOOST_LIBRARYDIR=$VS_Root\lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "BOOST_INCLUDEDIR=$VS_Root\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
+      - name: Checkout nextpnr
+        uses: actions/checkout@v2
+        with:
+          repository: YosysHQ/nextpnr
+          path: nextpnr
+
       - name: Build nextpnr
         working-directory: nextpnr
         run: |
