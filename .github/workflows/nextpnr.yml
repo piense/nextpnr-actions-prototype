@@ -65,7 +65,8 @@ jobs:
                     file.close();
                   });
                 };
-              } ).on("error", /*...*/);
+              } );
+              
             };
             request(url);
 
