@@ -34,14 +34,14 @@ jobs:
             const releaseAssets = await github.repos.listReleaseAssets({
              owner: "davidcorrigan714",
              repo: "nextpnr-actions-prototype",
-             id: releaseId});
+             release_id: releaseId});
             console.log(releaseAssets)
             latestAssetDate = "0000-00-00";
             latestAssetUrl = "";
             for(var asset in releaseAssets){
               if(releaseAssets[asset].created_at > latestAssetDate){
                 latestAssetDate = releaseAssets[asset].created_at;
-                latestAssetUrl = releaseAssets[asset].Url;
+                latestAssetUrl = releaseAssets[asset].browser_download_url;
               }
             }
 
