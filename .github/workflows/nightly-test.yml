@@ -29,10 +29,38 @@ jobs:
              owner: "davidcorrigan714",
              repo: "nextpnr-actions-prototype",
              tag: "prjtrellis/nightly" });
-            console.log(releases)
-            //const diff_url = context.payload.pull_request.diff_url
-            //const result = await github.request(diff_url)
-            //console.log(result)
+            var releaseId = releases.data.id;
+            console.log(releaseId);
+            const releaseAssets = await github.repos.listReleaseAssets({
+             owner: "davidcorrigan714",
+             repo: "nextpnr-actions-prototype",
+             id: releaseId});
+            console.log(releaseAssets)
+            latestAssetDate = "0000-00-00";
+            latestAssetUrl = "";
+            for(var asset in releaseAssets){
+              if(releaseAssets[asset].created_at > latestAssetDate){
+                latestAssetDate = releaseAssets[asset].created_at;
+                latestAssetUrl = releaseAssets[asset].Url;
+              }
+            }
+
+            console.log(latestAssetUrl);
+
+            var http = require('http');
+            var fs = require('fs');
+
+            var dest = '${process.env.GITHUB_WORKSPACE}/prjtrellis.zip';
+            var url = lastestAssetUrl;
+
+            var file = fs.createWriteStream(dest);
+            http.get(url, function(response) {
+              response.pipe(file);
+              file.on('finish', function() {
+                file.close(cb);
+              });
+            });
+
 
 
       - name: Upload Zip
