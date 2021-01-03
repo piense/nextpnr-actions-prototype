@@ -42,7 +42,7 @@ jobs:
             for(var asset in releaseAssetsData){
               console.log(asset);
               console.log(releaseAssetsData[asset].created_at);
-              if(releaseAssets[asset].created_at > latestAssetDate){
+              if(latestAssetDate[asset].created_at > latestAssetDate){
                 latestAssetDate = releaseAssetsData[asset].created_at;
                 latestAssetUrl = releaseAssetsData[asset].browser_download_url;
               }
