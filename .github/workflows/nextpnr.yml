@@ -17,91 +17,55 @@ jobs:
     steps:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
-  
+        
       # Have to be careful with the Python version,
       # there's a conflict with MSVC headers and the copysign function
       # that was patched in Nov/Dec 2020 and backported to 3.8.8 and that
       # seems to be supported by everything else so sticking with it
       - name: Upgrade Python
         run: |
-          $WebClient = New-Object System.Net.WebClient
-          
+          $WebClient = New-Object System.Net.WebClient          
           $WebClient.DownloadFile("https://www.python.org/ftp/python/3.8.7/python-3.8.7-amd64.exe",(Get-Location).tostring()+"\python3.exe")
           cmd /c start /wait python3.exe /quiet TargetDir=$Env:GITHUB_WORKSPACE\python Shortcuts=0 Include_launcher=1 PrependPath=1
           cmd /c mklink $Env:GITHUB_WORKSPACE\python\python3.exe $Env:GITHUB_WORKSPACE\python\python.exe
-          dir $Env:GITHUB_WORKSPACE\python
-          
-          $PYTHON_EXE = $Env:GITHUB_WORKSPACE + "\python\python.exe"
-          echo "PYTHON_EXE=$PYTHON_EXE" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          cat $env:GITHUB_ENV
-          
-      # The python version with Boost should match what's on the systems so we need to download
-      # and build instead of using GitHub's prebuilt cache
+          echo ($Env:GITHUB_WORKSPACE + "\python\") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          cat $env:GITHUB_PATH
+
       - name: Download & Build Boost
         run: |
-          echo $Env:PATH
-          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
-          choco install 7zip
+          choco install 7zip -y
           $WebClient = New-Object System.Net.WebClient
           $WebClient.DownloadFile("https://dl.bintray.com/boostorg/release/1.73.0/source/boost_1_73_0.zip",(Get-Location).tostring()+"\boost_1_73_0.7z")
           set-alias sz "$env:ProgramFiles\7-Zip\7z.exe"
           sz x ".\boost_1_73_0.7z"
           $vs_env = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\Build\vcvarsamd64_x86.bat"
+          $pythonDir=($Env:GITHUB_WORKSPACE.replace('\','/') + "/python/")
           & {
           .$vs_env
           cd boost_1_73_0
           .\bootstrap.bat
-          # Python wants the shared versions so lets do those
-          # CMake seems to want to find both when creating project files even if we only use one
-          .\b2 link=static runtime-link=static variant=release
-          .\b2 link=static runtime-link=static variant=debug
+          echo "using python : 3.8 : $pythonDir ;" | Out-File "project-config.jam" -encoding ASCII -Append
+          .\b2 link=static runtime-link=static variant=release python=3.8
+          .\b2 link=static runtime-link=static variant=debug python=3.8
           }
-
           $VS_Root = (C:\ProgramData\Chocolatey\bin\vswhere.exe -products * -requires Microsoft.Component.MSBuild -property installationPath -latest)+"\VC\Auxiliary\VS"
-
           Copy-Item -Recurse "boost" -Destination "$VS_Root\include"
           Copy-Item -Recurse "stage\lib\*" -Destination "$VS_Root\lib\x64"
-
           echo "BOOST_LIBRARYDIR=$VS_Root\lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "BOOST_INCLUDEDIR=$VS_Root\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Checkout prjtrellis
-        uses: actions/checkout@v2
-        with:
-          repository: YosysHQ/prjtrellis
-          path: prjtrellis
-          submodules: recursive
-          fetch-depth: 0
-
-      - name: Build prjtrellis
-        working-directory: prjtrellis\libtrellis\
+      - name: Download prjtrellis
         run: |
-          echo $Env:PYTHON_EXE
-          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
-          cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF .
-          msbuild /t:Build /p:Configuration=Release libtrellis.sln
-    
-      - name: Install prjtrellis
-        run: |
-          mkdir releaseDir
-          cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
-          dir releaseDir
-          dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release
-      - name: Checkout nextpnr
-        uses: actions/checkout@v2
-        with:
-          repository: YosysHQ/nextpnr
-          path: nextpnr
+          echo "TODO"
 
       - name: Build nextpnr
         working-directory: nextpnr
         run: |
-          $env:Path += ";"+$Env:GITHUB_WORKSPACE+"\boost_1_73_0\stage\lib"
-          $Env:PATH += ";" + $Env:GITHUB_WORKSPACE + "\python\"
+          $Python_EXECUTABLE = $env:GITHUB_PATH + "\python\python.exe"
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
-          cmake . -DSTATIC_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
+          cmake .  -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DPython_EXECUTABLE=$Python_EXECUTABLE -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
