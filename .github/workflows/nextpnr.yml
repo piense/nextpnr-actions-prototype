@@ -119,11 +119,16 @@ jobs:
       - name: Build nextpnr
         working-directory: nextpnr
         run: |
-          $Python_EXECUTABLE = $env:GITHUB_PATH + "\python\python.exe"
+          $Python_EXECUTABLE = $Env:GITHUB_PATH + "\python\python.exe"
+          echo "HERE1"
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
+          echo "HERE2"
           vcpkg.exe integrate install
+          echo "HERE2"
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
-          cmake .  -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DPython_EXECUTABLE=$Python_EXECUTABLE -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
+          echo "HERE3"
+          cmake .  --trace -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DPython_EXECUTABLE=$Python_EXECUTABLE -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release"
+          echo "HERE4"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
