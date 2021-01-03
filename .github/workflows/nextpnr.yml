@@ -47,7 +47,7 @@ jobs:
 
             console.log("Downloading: " + latestAssetUrl);
 
-            var https = require('https');
+            var https = require('follow-redirects').https;
             var fs = require('fs');
 
             var dest = 'prjtrellis.zip';
