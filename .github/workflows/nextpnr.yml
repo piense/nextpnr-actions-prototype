@@ -39,7 +39,6 @@ jobs:
             var latestAssetUrl = "";
             for(var asset in releaseAssetsData){
               if(releaseAssetsData[asset].created_at > latestAssetDate){
-                console.log("New latest");
                 latestAssetDate = releaseAssetsData[asset].created_at;
                 latestAssetUrl = releaseAssetsData[asset].browser_download_url;
               }
@@ -76,7 +75,7 @@ jobs:
           name: prjtrellis.zip
           path: prjtrellis.zip
 
-      - name: Unzip Prjtrellis
+      - name: Unzip prjtrellis
         run: |
           Expand-Archive -Path prjtrellis.zip  -DestinationPath .\prjtrellis
           dir .\prjtrellis
