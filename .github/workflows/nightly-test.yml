@@ -25,7 +25,10 @@ jobs:
         with:
           # The script to run
           script: |
-            const releases = await github.releases.release_for_tag( "davidcorrigan714/nextpnr-actions-prototype", "prjtrellis/nightly" )
+            const releases = await github.repos.getReleaseByTag({
+             owner: "davidcorrigan714",
+             repo: "nextpnr-actions-prototype",
+             tag: "prjtrellis/nightly" });
             console.log(releases)
             //const diff_url = context.payload.pull_request.diff_url
             //const result = await github.request(diff_url)
