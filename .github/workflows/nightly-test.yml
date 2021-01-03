@@ -42,7 +42,8 @@ jobs:
             for(var asset in releaseAssetsData){
               console.log(asset);
               console.log(releaseAssetsData[asset].created_at);
-              if(latestAssetDate[asset].created_at > latestAssetDate){
+              if(releaseAssetsData[asset].created_at > latestAssetDate){
+                console.log("New latest");
                 latestAssetDate = releaseAssetsData[asset].created_at;
                 latestAssetUrl = releaseAssetsData[asset].browser_download_url;
               }
