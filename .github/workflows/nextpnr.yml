@@ -17,7 +17,55 @@ jobs:
     steps:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
-        
+
+      - name: Download latest prjtrellis
+        uses: actions/github-script@v3.1.0
+        with:
+          # The script to run
+          script: |
+            const releases = await github.repos.getReleaseByTag({
+             owner: "davidcorrigan714",
+             repo: "nextpnr-actions-prototype",
+             tag: "prjtrellis/nightly" });
+            var releaseId = releases.data.id;
+
+            const releaseAssets = await github.repos.listReleaseAssets({
+             owner: "davidcorrigan714",
+             repo: "nextpnr-actions-prototype",
+             release_id: releaseId});
+            var releaseAssetsData = releaseAssets.data;
+            
+            var latestAssetDate = "0000-00-00";
+            var latestAssetUrl = "";
+            for(var asset in releaseAssetsData){
+              if(releaseAssetsData[asset].created_at > latestAssetDate){
+                console.log("New latest");
+                latestAssetDate = releaseAssetsData[asset].created_at;
+                latestAssetUrl = releaseAssetsData[asset].browser_download_url;
+              }
+            }
+
+            console.log("Downloading: " + latestAssetUrl);
+
+            var https = require('https');
+            var fs = require('fs');
+
+            var dest = 'prjtrellis.zip';
+            var url = latestAssetUrl;
+
+            var file = fs.createWriteStream(dest);
+            https.get(url, function(response) {
+              response.pipe(file);
+              file.on('finish', function() {
+                file.close();
+              });
+            });
+
+      - name: Unzip Prjtrellis
+        run: |
+          Expand-Archive -Path prjtrellis.zip  -DestinationPath .\prjtrellis
+          dir .\prjtrellis
+
       # Have to be careful with the Python version,
       # there's a conflict with MSVC headers and the copysign function
       # that was patched in Nov/Dec 2020 and backported to 3.8.8 and that
@@ -53,10 +101,6 @@ jobs:
           Copy-Item -Recurse "stage\lib\*" -Destination "$VS_Root\lib\x64"
           echo "BOOST_LIBRARYDIR=$VS_Root\lib\x64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           echo "BOOST_INCLUDEDIR=$VS_Root\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-      - name: Download prjtrellis
-        run: |
-          echo "TODO"
 
       - name: Build nextpnr
         working-directory: nextpnr
