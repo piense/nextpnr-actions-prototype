@@ -19,7 +19,19 @@ jobs:
         run: |
           mkdir output
           echo "Heyo" > output/test.txt
-          
+
+      - name: GitHub Script
+        uses: actions/github-script@v3.1.0
+        with:
+          # The script to run
+          script: |
+            const releases = await github.releases.release_for_tag( "davidcorrigan714/nextpnr-actions-prototype", "prjtrellis/nightly" )
+            console.log(releases)
+            //const diff_url = context.payload.pull_request.diff_url
+            //const result = await github.request(diff_url)
+            //console.log(result)
+
+
       - name: Upload Zip
         uses: actions/upload-artifact@v2
         with:
