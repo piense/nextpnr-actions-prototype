@@ -128,7 +128,7 @@ jobs:
           $Python_EXECUTABLE = $Env:GITHUB_PATH + "\python\python.exe"
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
-          $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\timing\util"
+          $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\share\trellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\share\trellis\timing\util"
           cmake .  -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DSTATIC_BUILD=ON -DBUILD_SHARED=OFF -DPython_EXECUTABLE=$Python_EXECUTABLE -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc' -DARCH=ecp5 -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
