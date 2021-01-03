@@ -36,8 +36,8 @@ jobs:
              repo: "nextpnr-actions-prototype",
              release_id: releaseId});
             console.log(releaseAssets)
-            latestAssetDate = "0000-00-00";
-            latestAssetUrl = "";
+            var latestAssetDate = "0000-00-00";
+            var latestAssetUrl = "";
             for(var asset in releaseAssets){
               if(releaseAssets[asset].created_at > latestAssetDate){
                 latestAssetDate = releaseAssets[asset].created_at;
