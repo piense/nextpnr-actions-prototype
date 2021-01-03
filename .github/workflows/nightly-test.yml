@@ -39,6 +39,8 @@ jobs:
             var latestAssetDate = "0000-00-00";
             var latestAssetUrl = "";
             for(var asset in releaseAssets){
+              console.log(asset);
+              console.log(releaseAssets[asset].created_at);
               if(releaseAssets[asset].created_at > latestAssetDate){
                 latestAssetDate = releaseAssets[asset].created_at;
                 latestAssetUrl = releaseAssets[asset].browser_download_url;
@@ -51,7 +53,7 @@ jobs:
             var fs = require('fs');
 
             var dest = '${process.env.GITHUB_WORKSPACE}/prjtrellis.zip';
-            var url = lastestAssetUrl;
+            var url = latestAssetUrl;
 
             var file = fs.createWriteStream(dest);
             http.get(url, function(response) {
