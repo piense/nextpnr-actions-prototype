@@ -77,7 +77,7 @@ jobs:
           dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release
           mkdir releaseDir\lib
           cp prjtrellis\libtrellis\Release\py* releaseDir\lib
-          cp prjtreelis\libtrellis\Release\trellis.lib releseDir\lib
+          cp prjtrellis\libtrellis\Release\trellis.lib releaseDir\lib
       
       - name: Upload Binaries
         uses: actions/upload-artifact@v2.2.1
