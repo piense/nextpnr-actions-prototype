@@ -75,6 +75,9 @@ jobs:
           cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\prjtrellis\libtrellis\cmake_install.cmake
           dir releaseDir
           dir $Env:GITHUB_WORKSPACE\prjtrellis\libtrellis\Release
+          mkdir releaseDir\lib
+          cp prjtrellis\libtrellis\Release\py* releaseDir\lib
+          cp prjtreelis\libtrellis\Release\trellis.lib releseDir\lib
       
       - name: Upload Binaries
         uses: actions/upload-artifact@v2.2.1
