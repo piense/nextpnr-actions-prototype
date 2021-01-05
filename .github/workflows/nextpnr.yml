@@ -7,7 +7,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: "9 0 * * *"
+    - cron: "15 0 * * *"
 jobs:
   next-pnr:
     name: prjtrellis
