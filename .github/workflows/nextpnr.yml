@@ -80,6 +80,68 @@ jobs:
           Expand-Archive -Path prjtrellis.zip  -DestinationPath .\prjtrellis
           dir .\prjtrellis
 
+      - name: Download latest prjoxide
+        uses: actions/github-script@v3.1.0
+        with:
+          # The script to run
+          script: |
+            const releases = await github.repos.getReleaseByTag({
+             owner: "davidcorrigan714",
+             repo: "nextpnr-actions-prototype",
+             tag: "prjoxide/nightly" });
+            var releaseId = releases.data.id;
+
+            const releaseAssets = await github.repos.listReleaseAssets({
+             owner: "davidcorrigan714",
+             repo: "nextpnr-actions-prototype",
+             release_id: releaseId});
+            var releaseAssetsData = releaseAssets.data;
+            
+            var latestAssetDate = "0000-00-00";
+            var latestAssetUrl = "";
+            for(var asset in releaseAssetsData){
+              if(releaseAssetsData[asset].created_at > latestAssetDate){
+                latestAssetDate = releaseAssetsData[asset].created_at;
+                latestAssetUrl = releaseAssetsData[asset].browser_download_url;
+              }
+            }
+
+            console.log("Downloading: " + latestAssetUrl);
+
+            var https = require('https');
+            var fs = require('fs');
+            var dest = 'prjoxide.zip';
+            var url = latestAssetUrl;
+            var file = fs.createWriteStream(dest);
+
+            const request = function(url) {
+              https.get(url, (response) => {
+                var body = [];
+                if (response.statusCode == 302) {
+                  body = [];
+                  request(response.headers.location);
+                } else {
+                  response.pipe(file);
+                  file.on('finish', function() {
+                    file.close();
+                  });
+                };
+              } );
+              
+            };
+            request(url);
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: prjoxide.zip
+          path: prjoxide.zip
+
+      - name: Unzip prjoxide
+        run: |
+          Expand-Archive -Path prjoxide.zip  -DestinationPath .\prjoxide
+          dir .\prjoxide
+
       # Have to be careful with the Python version,
       # there's a conflict with MSVC headers and the copysign function
       # that was patched in Nov/Dec 2020 and backported to 3.8.8 and that
