@@ -142,6 +142,68 @@ jobs:
           Expand-Archive -Path prjoxide.zip  -DestinationPath .\prjoxide
           dir .\prjoxide
 
+      - name: Download latest icestorm
+        uses: actions/github-script@v3.1.0
+        with:
+          # The script to run
+          script: |
+            const releases = await github.repos.getReleaseByTag({
+             owner: "davidcorrigan714",
+             repo: "nextpnr-actions-prototype",
+             tag: "icestorm/nightly" });
+            var releaseId = releases.data.id;
+
+            const releaseAssets = await github.repos.listReleaseAssets({
+             owner: "davidcorrigan714",
+             repo: "nextpnr-actions-prototype",
+             release_id: releaseId});
+            var releaseAssetsData = releaseAssets.data;
+            
+            var latestAssetDate = "0000-00-00";
+            var latestAssetUrl = "";
+            for(var asset in releaseAssetsData){
+              if(releaseAssetsData[asset].created_at > latestAssetDate){
+                latestAssetDate = releaseAssetsData[asset].created_at;
+                latestAssetUrl = releaseAssetsData[asset].browser_download_url;
+              }
+            }
+
+            console.log("Downloading: " + latestAssetUrl);
+
+            var https = require('https');
+            var fs = require('fs');
+            var dest = 'icestorm.zip';
+            var url = latestAssetUrl;
+            var file = fs.createWriteStream(dest);
+
+            const request = function(url) {
+              https.get(url, (response) => {
+                var body = [];
+                if (response.statusCode == 302) {
+                  body = [];
+                  request(response.headers.location);
+                } else {
+                  response.pipe(file);
+                  file.on('finish', function() {
+                    file.close();
+                  });
+                };
+              } );
+              
+            };
+            request(url);
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: icestorm.zip
+          path: icestorm.zip
+
+      - name: Unzip icestorm
+        run: |
+          Expand-Archive -Path icestorm.zip  -DestinationPath .\icestorm
+          dir .\icestorm
+
       # Have to be careful with the Python version,
       # there's a conflict with MSVC headers and the copysign function
       # that was patched in Nov/Dec 2020 and backported to 3.8.8 and that
@@ -189,7 +251,7 @@ jobs:
           vcpkg.exe install qt5-base:x64-windows eigen3:x64-windows
           vcpkg.exe integrate install
           $Env:PYTHONPATH = "$Env:GITHUB_WORKSPACE\prjtrellis\share\trellis\util\common;$Env:GITHUB_WORKSPACE\prjtrellis\share\trellis\timing\util"
-          cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DSTATIC_BUILD=ON -DPython_ADDITIONAL_VERSIONS='3.8' -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc /D "NOMINMAX"' -DARCH="ecp5;nexus" -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis"  -DOXIDE_INSTALL_PREFIX="$Env:GITHUB_WORKSPACE\prjoxide"
+          cmake . -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DSTATIC_BUILD=ON -DPython_ADDITIONAL_VERSIONS='3.8' -DCMAKE_CXX_FLAGS='/D "WIN32" /EHsc /D "NOMINMAX"' -DARCH="ecp5;nexus;ice40" -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\prjtrellis" -DOXIDE_INSTALL_PREFIX="$Env:GITHUB_WORKSPACE\prjoxide" -DICESTORM_INSTALL_PREFIX="$Env:GITHUB_WORKSPACE\icestorm"
           msbuild /t:Build /p:Configuration=Release /p:Platform=x64 nextpnr.sln
       
       - name: Install nextpnr
