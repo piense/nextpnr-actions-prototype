@@ -131,12 +131,6 @@ jobs:
             };
             request(url);
 
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.1
-        with:
-          name: prjoxide.zip
-          path: prjoxide.zip
-
       - name: Unzip prjoxide
         run: |
           Expand-Archive -Path prjoxide.zip  -DestinationPath .\prjoxide
@@ -192,12 +186,6 @@ jobs:
               
             };
             request(url);
-
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.2.1
-        with:
-          name: icestorm.zip
-          path: icestorm.zip
 
       - name: Unzip icestorm
         run: |
@@ -258,13 +246,6 @@ jobs:
         run: |
           cmake -DCMAKE_INSTALL_PREFIX="releaseDir" -DBUILD_TYPE=Release -P .\nextpnr\cmake_install.cmake 
           dir releasedir
-          
-      - name: Upload Binaries
-        uses: actions/upload-artifact@v2.2.1
-        with:
-          name: nextpnr-all
-          path: .
-          #if-no-files-found: error
 
       - name: Copy Boost Into Release
         run: |
@@ -275,4 +256,4 @@ jobs:
         with:
           name: nextpnr
           path: .\releaseDir
-          #if-no-files-found: error
+          if-no-files-found: error
