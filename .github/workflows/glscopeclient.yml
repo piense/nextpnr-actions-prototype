@@ -68,3 +68,8 @@ jobs:
           path: ./*
           name: glscopeclient
    
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          path: $MSYSTEM_PREFIX/lib/*
+          name: msys_libs
