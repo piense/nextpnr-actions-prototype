@@ -44,7 +44,7 @@ jobs:
         working-directory: yosys
         run: |
           mkdir buildProducts
-          pip3 install xdot
+          pip3 install xdot setuptools
           mingw32-make config-msys2-64
           mingw32-make -j4
           mingw32-make DESTDIR=buildProducts PREFIX='' install
