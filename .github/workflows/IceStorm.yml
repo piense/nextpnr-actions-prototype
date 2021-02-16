@@ -35,6 +35,7 @@ jobs:
             msys/pkg-config
             python3
             mingw64/mingw-w64-x86_64-python-pip
+            mingw64/mingw-w64-x86_64-python-setuptools
             mingw64/mingw-w64-x86_64-dlfcn
             mingw64/mingw-w64-x86_64-libftdi
             mingw-w64-x86_64-toolchain
