@@ -36,6 +36,7 @@ jobs:
             git
             python3
             mingw64/mingw-w64-x86_64-python-pip
+            mingw64/mingw-w64-x86_64-python-setuptools
             mingw64/mingw-w64-x86_64-dlfcn
             mingw-w64-x86_64-toolchain
 
